@@ -20,7 +20,6 @@ const UserProfile: React.FC = () => {
 
   const handlePasswordChange = (e: React.FormEvent) => {
     e.preventDefault();
-    // FR-1.5.1, FR-1.5.2, FR-1.5.3: Change password logic
     alert('Password changed successfully!');
     setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
   };
@@ -29,7 +28,7 @@ const UserProfile: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">User Profile</h1>
-        <p className="text-muted-foreground">Module 1: User Profiling</p>
+        <p className="text-muted-foreground">Manage your account settings</p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-4">
@@ -80,7 +79,6 @@ const UserProfile: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="security" className="space-y-4">
-          {/* FR-1.5: Change Password */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -91,7 +89,6 @@ const UserProfile: React.FC = () => {
             </CardHeader>
             <CardContent>
               <form onSubmit={handlePasswordChange} className="space-y-4">
-                {/* FR-1.5.1: Enter Existing Password */}
                 <div className="space-y-2">
                   <Label>Current Password</Label>
                   <Input
@@ -101,7 +98,6 @@ const UserProfile: React.FC = () => {
                     className="border-2 border-foreground"
                   />
                 </div>
-                {/* FR-1.5.2: Enter New Password */}
                 <div className="space-y-2">
                   <Label>New Password</Label>
                   <Input
@@ -111,7 +107,6 @@ const UserProfile: React.FC = () => {
                     className="border-2 border-foreground"
                   />
                 </div>
-                {/* FR-1.5.3: Confirm New Password */}
                 <div className="space-y-2">
                   <Label>Confirm New Password</Label>
                   <Input
@@ -126,7 +121,6 @@ const UserProfile: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* FR-1.6: Two Factor Auth */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -140,11 +134,9 @@ const UserProfile: React.FC = () => {
                 <div>
                   <p className="font-medium">Enable 2FA</p>
                   <p className="text-sm text-muted-foreground">
-                    {/* FR-1.6.1: Time Based OTP */}
                     Use time-based one-time passwords for verification
                   </p>
                 </div>
-                {/* FR-1.6.2: Enable/Disable 2FA */}
                 <Switch
                   checked={twoFactorEnabled}
                   onCheckedChange={setTwoFactorEnabled}
@@ -155,14 +147,12 @@ const UserProfile: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="access" className="space-y-4">
-          {/* FR-1.7: Role-Based Access */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle>Role-Based Access Control</CardTitle>
               <CardDescription>Manage user roles and permissions</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* FR-1.7.1, FR-1.7.2, FR-1.7.3 */}
               <div className="grid gap-4">
                 <div className="flex items-center justify-between p-4 border-2 border-foreground">
                   <div>

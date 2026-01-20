@@ -9,7 +9,7 @@ const BusinessSetup: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Business Setup & Configuration</h1>
-        <p className="text-muted-foreground">Module 2: Company profile and settings</p>
+        <p className="text-muted-foreground">Company profile and settings</p>
       </div>
       <Card className="border-2 border-foreground">
         <CardHeader><CardTitle>Company Profile</CardTitle></CardHeader>

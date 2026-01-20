@@ -35,7 +35,6 @@ const Login: React.FC = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* FR-1.2.1: Enter Email */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -49,7 +48,6 @@ const Login: React.FC = () => {
               />
             </div>
 
-            {/* FR-1.2.2: Enter Password */}
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -63,7 +61,6 @@ const Login: React.FC = () => {
               />
             </div>
 
-            {/* FR-1.2.3: Remember Me */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Checkbox
@@ -75,7 +72,6 @@ const Login: React.FC = () => {
                   Remember me
                 </Label>
               </div>
-              {/* FR-1.4.1: Forgot Password Link */}
               <Link to="/forgot-password" className="text-sm underline hover:text-muted-foreground">
                 Forgot password?
               </Link>
@@ -87,7 +83,6 @@ const Login: React.FC = () => {
 
             <Separator className="my-4" />
 
-            {/* FR-1.3.1: Google Sign In */}
             <Button type="button" variant="outline" className="w-full border-2 border-foreground">
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                 <path

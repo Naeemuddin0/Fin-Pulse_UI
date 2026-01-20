@@ -18,8 +18,6 @@ const TransactionManagement: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [isManualEntryOpen, setIsManualEntryOpen] = useState(false);
 
-  // FR-5.1.2: Search transactions
-  // FR-5.1.3: Filter by Date Range, Status, Category
   const filteredTransactions = transactions.filter((t) => {
     const matchesSearch =
       t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -30,14 +28,12 @@ const TransactionManagement: React.FC = () => {
   });
 
   const handleApprove = (id: string) => {
-    // FR-5.4.2: Mark as Normal/Approve
     setTransactions((prev) =>
       prev.map((t) => (t.id === id ? { ...t, status: 'approved' } : t))
     );
   };
 
   const handleCategorize = (id: string, category: string) => {
-    // FR-5.2.3: Assign/change Category
     setTransactions((prev) =>
       prev.map((t) => (t.id === id ? { ...t, category, status: t.status === 'uncategorized' ? 'pending' : t.status } : t))
     );
@@ -65,9 +61,8 @@ const TransactionManagement: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Transaction Management</h1>
-          <p className="text-muted-foreground">Module 5: Review and manage transactions</p>
+          <p className="text-muted-foreground">Review and manage transactions</p>
         </div>
-        {/* FR-5.3.1: Manual entry form */}
         <Dialog open={isManualEntryOpen} onOpenChange={setIsManualEntryOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -80,7 +75,6 @@ const TransactionManagement: React.FC = () => {
               <DialogTitle>Add Manual Transaction</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              {/* FR-5.3.2: Validate required fields */}
               <div className="space-y-2">
                 <Label>Date *</Label>
                 <Input type="date" className="border-2 border-foreground" />
@@ -121,7 +115,6 @@ const TransactionManagement: React.FC = () => {
               </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setIsManualEntryOpen(false)}>Cancel</Button>
-                {/* FR-5.3.3: Save manual entry */}
                 <Button onClick={() => setIsManualEntryOpen(false)}>Save Transaction</Button>
               </div>
             </div>
@@ -129,11 +122,9 @@ const TransactionManagement: React.FC = () => {
         </Dialog>
       </div>
 
-      {/* FR-5.1.1: Display unified list */}
       <Card className="border-2 border-foreground">
         <CardHeader>
           <div className="flex flex-wrap items-center gap-4">
-            {/* FR-5.1.2: Search bar */}
             <div className="relative flex-1 min-w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
               <Input
@@ -143,7 +134,6 @@ const TransactionManagement: React.FC = () => {
                 className="pl-10 border-2 border-foreground"
               />
             </div>
-            {/* FR-5.1.3: Filters */}
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-40 border-2 border-foreground">
                 <SelectValue placeholder="Status" />
@@ -193,12 +183,10 @@ const TransactionManagement: React.FC = () => {
                 >
                   <TableCell>{transaction.date}</TableCell>
                   <TableCell className="font-medium">
-                    {/* FR-5.4.1: Enable editing */}
                     {transaction.description}
                   </TableCell>
                   <TableCell>{transaction.vendor || '-'}</TableCell>
                   <TableCell>
-                    {/* FR-5.1.4: Flag uncategorized */}
                     {transaction.status === 'uncategorized' ? (
                       <div className="flex items-center gap-2">
                         <AlertCircle size={16} className="text-destructive" />

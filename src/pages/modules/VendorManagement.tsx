@@ -35,15 +35,13 @@ const VendorManagement: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Vendor & Contact Management</h1>
-          <p className="text-muted-foreground">Module 3: Manage vendors and employees</p>
+          <p className="text-muted-foreground">Manage vendors and employees</p>
         </div>
         <div className="flex gap-2">
-          {/* FR-3.5.1: Upload CSV for bulk import */}
           <Button variant="outline">
             <Upload size={18} className="mr-2" />
             Import CSV
           </Button>
-          {/* FR-3.1.1: Create new vendor */}
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>
@@ -60,7 +58,6 @@ const VendorManagement: React.FC = () => {
                   <Label>Vendor Name</Label>
                   <Input className="border-2 border-foreground" placeholder="Enter vendor name" />
                 </div>
-                {/* FR-3.1.2: Contact details & bank info */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Email</Label>
@@ -71,7 +68,6 @@ const VendorManagement: React.FC = () => {
                     <Input className="border-2 border-foreground" placeholder="+92-XXX-XXXXXXX" />
                   </div>
                 </div>
-                {/* FR-3.3.1: Define vendor category */}
                 <div className="space-y-2">
                   <Label>Category</Label>
                   <Select>
@@ -86,7 +82,6 @@ const VendorManagement: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                {/* FR-3.3.2: Default expense category */}
                 <div className="space-y-2">
                   <Label>Default Expense Category (GL Account)</Label>
                   <Select>
@@ -162,9 +157,7 @@ const VendorManagement: React.FC = () => {
                           <p className="text-muted-foreground">{vendor.phone}</p>
                         </div>
                       </TableCell>
-                      {/* FR-3.4.2: Total spend */}
                       <TableCell>PKR {vendor.totalSpend.toLocaleString()}</TableCell>
-                      {/* FR-3.4.3: Avg transaction value */}
                       <TableCell>PKR {vendor.avgTransactionValue.toLocaleString()}</TableCell>
                       <TableCell>
                         <Badge variant={vendor.status === 'active' ? 'default' : 'secondary'}>
@@ -173,15 +166,12 @@ const VendorManagement: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          {/* FR-3.1.3: Edit vendor */}
                           <Button variant="outline" size="icon">
                             <Edit size={16} />
                           </Button>
-                          {/* FR-3.4.1: View analytics/history */}
                           <Button variant="outline" size="icon">
                             <TrendingUp size={16} />
                           </Button>
-                          {/* FR-3.1.4: Archive vendor */}
                           <Button variant="outline" size="icon" onClick={() => handleArchive(vendor.id)}>
                             <Archive size={16} />
                           </Button>
@@ -196,7 +186,6 @@ const VendorManagement: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="employees">
-          {/* FR-3.2: Manage Employee Profiles */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

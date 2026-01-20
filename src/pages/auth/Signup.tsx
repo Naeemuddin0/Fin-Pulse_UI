@@ -58,7 +58,6 @@ const Signup: React.FC = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* FR-1.1.1: Select Role */}
             <div className="space-y-2">
               <Label htmlFor="role">Role</Label>
               <Select value={formData.role} onValueChange={(value) => handleChange('role', value)}>
@@ -73,7 +72,6 @@ const Signup: React.FC = () => {
               </Select>
             </div>
 
-            {/* FR-1.1.2: Business Name */}
             <div className="space-y-2">
               <Label htmlFor="businessName">Business Name</Label>
               <Input
@@ -86,7 +84,6 @@ const Signup: React.FC = () => {
               />
             </div>
 
-            {/* FR-1.1.3: Username */}
             <div className="space-y-2">
               <Label htmlFor="username">Full Name</Label>
               <Input
@@ -99,7 +96,6 @@ const Signup: React.FC = () => {
               />
             </div>
 
-            {/* FR-1.1.4: Email */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -113,7 +109,6 @@ const Signup: React.FC = () => {
               />
             </div>
 
-            {/* FR-1.1.5: Password */}
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -127,7 +122,6 @@ const Signup: React.FC = () => {
               />
             </div>
 
-            {/* FR-1.1.6: Confirm Password */}
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
@@ -152,7 +146,6 @@ const Signup: React.FC = () => {
               </Link>
             </p>
 
-            {/* FR-1.1.7: Email verification note */}
             <p className="text-center text-xs text-muted-foreground">
               A verification email will be sent to confirm your account.
             </p>

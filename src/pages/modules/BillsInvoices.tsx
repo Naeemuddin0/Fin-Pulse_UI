@@ -45,9 +45,8 @@ const BillsInvoices: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Bills & Invoice Management</h1>
-          <p className="text-muted-foreground">Module 6: Manage payables and receivables</p>
+          <p className="text-muted-foreground">Manage payables and receivables</p>
         </div>
-        {/* FR-6.1: Record Vendor Bill */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -60,7 +59,6 @@ const BillsInvoices: React.FC = () => {
               <DialogTitle>Record Vendor Bill</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 max-h-[70vh] overflow-y-auto">
-              {/* FR-6.1.1: Select Vendor */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Vendor</Label>
@@ -75,7 +73,6 @@ const BillsInvoices: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                {/* FR-6.1.2: Bill Details */}
                 <div className="space-y-2">
                   <Label>Reference #</Label>
                   <Input className="border-2 border-foreground" placeholder="BILL-XXX" />
@@ -92,7 +89,6 @@ const BillsInvoices: React.FC = () => {
                 </div>
               </div>
 
-              {/* FR-6.1.3: Line Items */}
               <div className="space-y-2">
                 <Label>Line Items</Label>
                 <Table>
@@ -169,7 +165,6 @@ const BillsInvoices: React.FC = () => {
                 </Button>
               </div>
 
-              {/* FR-6.1.4: Auto-calculate totals */}
               <div className="flex justify-end">
                 <div className="w-48 space-y-2">
                   <div className="flex justify-between">
@@ -187,7 +182,6 @@ const BillsInvoices: React.FC = () => {
                 </div>
               </div>
 
-              {/* FR-6.1.5: Upload bill image */}
               <div className="space-y-2">
                 <Label>Attach Bill Image</Label>
                 <div className="border-2 border-dashed border-muted p-8 text-center cursor-pointer hover:border-foreground transition-colors">
@@ -251,7 +245,6 @@ const BillsInvoices: React.FC = () => {
                       <TableCell>PKR {bill.amountPaid.toLocaleString()}</TableCell>
                       <TableCell>{getStatusBadge(bill.status)}</TableCell>
                       <TableCell>
-                        {/* FR-6.3: Record Payment */}
                         {bill.status !== 'paid' && (
                           <Button variant="outline" size="sm">Record Payment</Button>
                         )}
@@ -263,11 +256,10 @@ const BillsInvoices: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* FR-6.5: Aging Reports */}
           <Card className="border-2 border-foreground mt-4">
             <CardHeader>
               <CardTitle>Payables Aging Report</CardTitle>
-              <CardDescription>FR-6.5.2: Outstanding debts by time buckets</CardDescription>
+              <CardDescription>Outstanding debts by time buckets</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-4 gap-4">
@@ -293,7 +285,6 @@ const BillsInvoices: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="invoices">
-          {/* FR-6.2: Customer Invoices */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle>Customer Invoices (Accounts Receivable)</CardTitle>

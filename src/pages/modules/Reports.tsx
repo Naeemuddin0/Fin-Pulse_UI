@@ -11,7 +11,7 @@ const Reports: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Reports & Exports</h1>
-          <p className="text-muted-foreground">Module 15: Generate financial reports</p>
+          <p className="text-muted-foreground">Generate financial reports</p>
         </div>
       </div>
 

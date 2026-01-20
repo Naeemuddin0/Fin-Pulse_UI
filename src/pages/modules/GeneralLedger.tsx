@@ -45,14 +45,13 @@ const GeneralLedger: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">General Ledger</h1>
-          <p className="text-muted-foreground">Module 9: Chart of Accounts & Journal Entries</p>
+          <p className="text-muted-foreground">Chart of Accounts & Journal Entries</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
             <Plus size={18} className="mr-2" />
             New Account
           </Button>
-          {/* FR-9.2: Create Journal Entry */}
           <Dialog open={isJournalOpen} onOpenChange={setIsJournalOpen}>
             <DialogTrigger asChild>
               <Button>
@@ -65,7 +64,6 @@ const GeneralLedger: React.FC = () => {
                 <DialogTitle>Create Journal Entry</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                {/* FR-9.2.1: Journal Details */}
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <Label>Date</Label>
@@ -75,7 +73,6 @@ const GeneralLedger: React.FC = () => {
                     <Label>Reference #</Label>
                     <Input className="border-2 border-foreground" placeholder="JE-XXX" />
                   </div>
-                  {/* FR-9.2.4: Recurring Templates */}
                   <div className="space-y-2">
                     <Label>Template</Label>
                     <Select>
@@ -95,7 +92,6 @@ const GeneralLedger: React.FC = () => {
                   <Input className="border-2 border-foreground" placeholder="Entry description" />
                 </div>
 
-                {/* FR-9.2.2: Debit/Credit lines */}
                 <div className="space-y-2">
                   <Label>Journal Lines</Label>
                   <Table>
@@ -164,7 +160,6 @@ const GeneralLedger: React.FC = () => {
                   </Button>
                 </div>
 
-                {/* FR-9.2.3: Validation */}
                 <div className="flex justify-between items-center p-4 border-2 border-foreground">
                   <div className="flex gap-8">
                     <div>
@@ -201,11 +196,10 @@ const GeneralLedger: React.FC = () => {
         </TabsList>
 
         <TabsContent value="chart">
-          {/* FR-9.1.1: Hierarchical tree-view */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle>Chart of Accounts</CardTitle>
-              <CardDescription>FR-9.1.1: Hierarchical view of all accounts</CardDescription>
+              <CardDescription>Hierarchical view of all accounts</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-1">
@@ -286,7 +280,6 @@ const GeneralLedger: React.FC = () => {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {/* FR-9.4: Reverse Entry */}
                         <Button variant="outline" size="sm">
                           <Undo2 size={16} className="mr-1" />
                           Reverse
@@ -301,11 +294,10 @@ const GeneralLedger: React.FC = () => {
         </TabsContent>
 
         <TabsContent value="trial">
-          {/* FR-9.6: Trial Balance */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle>Trial Balance</CardTitle>
-              <CardDescription>FR-9.6.1: Aggregate all account balances</CardDescription>
+              <CardDescription>Aggregate all account balances</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -330,7 +322,6 @@ const GeneralLedger: React.FC = () => {
                       </TableCell>
                     </TableRow>
                   ))}
-                  {/* FR-9.6.2: Total Debits vs Credits */}
                   <TableRow className="border-t-2 border-foreground font-bold">
                     <TableCell colSpan={2}>Total</TableCell>
                     <TableCell className="text-right">PKR 1,888,500</TableCell>
@@ -338,7 +329,6 @@ const GeneralLedger: React.FC = () => {
                   </TableRow>
                 </TableBody>
               </Table>
-              {/* FR-9.6.3: Flag imbalance */}
               <div className="mt-4 p-4 bg-chart-2/10 border-2 border-chart-2 flex items-center gap-2">
                 <Badge className="bg-chart-2">Balanced</Badge>
                 <span className="text-sm">Trial balance is in equilibrium</span>
@@ -348,14 +338,13 @@ const GeneralLedger: React.FC = () => {
         </TabsContent>
       </Tabs>
 
-      {/* FR-9.5: Close Accounting Period */}
       <Card className="border-2 border-foreground">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Lock size={20} />
             Period Close
           </CardTitle>
-          <CardDescription>FR-9.5: Lock financial records for a period</CardDescription>
+          <CardDescription>Lock financial records for a period</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-between">

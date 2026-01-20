@@ -25,7 +25,7 @@ const AuditTrail: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Audit Trail & Change History</h1>
-          <p className="text-muted-foreground">Module 14: Track all system activity</p>
+          <p className="text-muted-foreground">Track all system activity</p>
         </div>
         <Button variant="outline"><Download size={18} className="mr-2" />Export Report</Button>
       </div>
