@@ -29,7 +29,7 @@ const AgentCentre: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Agent Action Centre</h1>
-          <p className="text-muted-foreground">Module 13: AI-powered insights and recommendations</p>
+          <p className="text-muted-foreground">AI-powered insights and recommendations</p>
         </div>
         <Badge variant="destructive" className="text-lg px-4 py-2">{pendingCount} Pending Actions</Badge>
       </div>

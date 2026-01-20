@@ -46,20 +46,17 @@ const Reconciliation: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Bank Reconciliation</h1>
-          <p className="text-muted-foreground">Module 8: Match bank statements with system records</p>
+          <p className="text-muted-foreground">Match bank statements with system records</p>
         </div>
         <div className="flex gap-2">
-          {/* FR-8.2.3: Accept All high-confidence */}
           <Button variant="outline">
             <Check size={18} className="mr-2" />
             Accept All High-Confidence
           </Button>
-          {/* FR-8.7.1: Generate Summary Report */}
           <Button>Finalize Reconciliation</Button>
         </div>
       </div>
 
-      {/* FR-8.1.3: Progress indicator */}
       <Card className="border-2 border-foreground">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between mb-2">
@@ -70,7 +67,6 @@ const Reconciliation: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* FR-8.1.1: Split-screen UI */}
       <div className="grid grid-cols-2 gap-4">
         {/* Left: Bank Statement */}
         <Card className="border-2 border-foreground">
@@ -123,7 +119,6 @@ const Reconciliation: React.FC = () => {
                     <TableCell className="text-sm">{item.date}</TableCell>
                     <TableCell className="text-sm font-medium">{item.description}</TableCell>
                     <TableCell className="text-sm">PKR {item.amount.toLocaleString()}</TableCell>
-                    {/* FR-8.2.2: Confidence score */}
                     <TableCell>{getConfidenceBadge(item.confidence)}</TableCell>
                   </TableRow>
                 ))}
@@ -137,7 +132,6 @@ const Reconciliation: React.FC = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>System Records</CardTitle>
-              {/* FR-8.1.2: Filter unreconciled */}
               <Select defaultValue="unreconciled">
                 <SelectTrigger className="w-40 border-2 border-foreground">
                   <SelectValue />
@@ -200,7 +194,6 @@ const Reconciliation: React.FC = () => {
         </Card>
       </div>
 
-      {/* FR-8.3: Manual Matching Actions */}
       {(selectedBank.length > 0 || selectedSystem.length > 0) && (
         <Card className="border-2 border-foreground">
           <CardContent className="pt-6">
@@ -209,7 +202,6 @@ const Reconciliation: React.FC = () => {
                 <span className="text-sm">
                   Selected: <strong>{selectedBank.length}</strong> bank items, <strong>{selectedSystem.length}</strong> system items
                 </span>
-                {/* FR-8.3.2: Validate totals */}
                 {selectedBank.length > 0 && selectedSystem.length > 0 && (
                   <Badge variant="outline" className="gap-1">
                     <AlertCircle size={14} />
@@ -218,12 +210,10 @@ const Reconciliation: React.FC = () => {
                 )}
               </div>
               <div className="flex gap-2">
-                {/* FR-8.4.2: Split for bank fees */}
                 <Button variant="outline">
                   <Split size={18} className="mr-2" />
                   Split (Bank Fee)
                 </Button>
-                {/* FR-8.3.1: Manual match */}
                 <Button>
                   <ArrowRight size={18} className="mr-2" />
                   Match Selected
@@ -234,14 +224,13 @@ const Reconciliation: React.FC = () => {
         </Card>
       )}
 
-      {/* FR-8.5: Unpresented Items */}
       <Card className="border-2 border-foreground">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertCircle size={20} />
             Unpresented Items
           </CardTitle>
-          <CardDescription>FR-8.5.1: Unmatched system bills flagged for review</CardDescription>
+          <CardDescription>Unmatched system bills flagged for review</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">

@@ -12,7 +12,7 @@ const ExpenseTracking: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Expense Tracking & Analytics</h1>
-        <p className="text-muted-foreground">Module 12: Monitor and analyze spending</p>
+        <p className="text-muted-foreground">Monitor and analyze spending</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

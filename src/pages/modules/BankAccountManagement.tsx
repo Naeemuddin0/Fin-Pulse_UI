@@ -46,9 +46,8 @@ const BankAccountManagement: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Bank Account Management</h1>
-          <p className="text-muted-foreground">Module 7: Manage bank accounts and liquidity</p>
+          <p className="text-muted-foreground">Manage bank accounts and liquidity</p>
         </div>
-        {/* FR-7.1: Add Bank Account */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -61,7 +60,6 @@ const BankAccountManagement: React.FC = () => {
               <DialogTitle>Add Bank Account</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              {/* FR-7.1.1: Select Bank Institution */}
               <div className="space-y-2">
                 <Label>Bank Institution</Label>
                 <Select>
@@ -75,12 +73,10 @@ const BankAccountManagement: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
-              {/* FR-7.1.2: Account Number/IBAN */}
               <div className="space-y-2">
                 <Label>Account Number / IBAN</Label>
                 <Input className="border-2 border-foreground" placeholder="PK45-XXXX-XXXX-XXXX-XXXX" />
               </div>
-              {/* FR-7.1.3: Account Category */}
               <div className="space-y-2">
                 <Label>Account Category</Label>
                 <Select>
@@ -95,7 +91,6 @@ const BankAccountManagement: React.FC = () => {
                   </SelectContent>
                 </Select>
               </div>
-              {/* FR-7.1.4: Opening Balance */}
               <div className="space-y-2">
                 <Label>Opening Balance (PKR)</Label>
                 <Input type="number" className="border-2 border-foreground" placeholder="0.00" />
@@ -109,7 +104,6 @@ const BankAccountManagement: React.FC = () => {
         </Dialog>
       </div>
 
-      {/* FR-7.2: Monitor Liquidity - Consolidated View */}
       <div className="grid grid-cols-3 gap-4">
         <Card className="border-2 border-foreground">
           <CardContent className="pt-6">
@@ -133,7 +127,6 @@ const BankAccountManagement: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-        {/* FR-7.2.3: Cash vs Credit composition */}
         <Card className="border-2 border-foreground">
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground mb-2">Cash vs Credit Composition</p>
@@ -148,7 +141,6 @@ const BankAccountManagement: React.FC = () => {
         </Card>
       </div>
 
-      {/* FR-7.2.1: Card view of all accounts */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {accounts.map((account) => (
           <Card key={account.id} className="border-2 border-foreground">
@@ -158,7 +150,6 @@ const BankAccountManagement: React.FC = () => {
                   {getCategoryIcon(account.category)}
                   <CardTitle className="text-lg">{account.institutionName}</CardTitle>
                 </div>
-                {/* FR-7.5.2: Reconciliation status */}
                 <Badge
                   variant={account.reconciliationStatus === 'up_to_date' ? 'default' : 'destructive'}
                   className={account.reconciliationStatus === 'up_to_date' ? 'bg-chart-2' : ''}
@@ -170,16 +161,14 @@ const BankAccountManagement: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Current Balance</span>
-                  {/* FR-7.2.2: Dynamic balance */}
-                  <span className="text-xl font-bold">PKR {account.currentBalance.toLocaleString()}</span>
-                </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Current Balance</span>
+                    <span className="text-xl font-bold">PKR {account.currentBalance.toLocaleString()}</span>
+                  </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">Category</span>
                   <Badge variant="outline">{account.category.replace('_', ' ')}</Badge>
                 </div>
-                {/* FR-7.5.1: Last Reconciled Date */}
                 {account.lastReconciledDate && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-muted-foreground">Last Reconciled</span>
@@ -187,16 +176,13 @@ const BankAccountManagement: React.FC = () => {
                   </div>
                 )}
                 <div className="flex gap-2 pt-2">
-                  {/* FR-7.3: View Account History */}
                   <Button variant="outline" size="sm" className="flex-1">
                     <History size={16} className="mr-1" />
                     History
                   </Button>
-                  {/* FR-7.4.1: Edit account */}
                   <Button variant="outline" size="icon">
                     <Edit size={16} />
                   </Button>
-                  {/* FR-7.4.2: Archive account */}
                   <Button variant="outline" size="icon">
                     <Archive size={16} />
                   </Button>
@@ -207,17 +193,15 @@ const BankAccountManagement: React.FC = () => {
         ))}
       </div>
 
-      {/* FR-7.3: Account History View */}
       <Card className="border-2 border-foreground">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <History size={20} />
             Recent Account Activity
           </CardTitle>
-          <CardDescription>FR-7.3.1: Transaction list for selected account</CardDescription>
+          <CardDescription>Transaction list for selected account</CardDescription>
         </CardHeader>
         <CardContent>
-          {/* FR-7.3.2: Filter by Date Range, Amount, Type */}
           <div className="flex gap-4 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />

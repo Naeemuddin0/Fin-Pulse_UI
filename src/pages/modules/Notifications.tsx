@@ -23,7 +23,7 @@ const Notifications: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Notification System</h1>
-          <p className="text-muted-foreground">Module 16: Manage all alerts and notifications</p>
+          <p className="text-muted-foreground">Manage all alerts and notifications</p>
         </div>
         <div className="flex gap-2">
           <Badge variant="destructive">{unreadCount} Unread</Badge>

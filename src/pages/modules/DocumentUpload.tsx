@@ -47,17 +47,16 @@ const DocumentUpload: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Document Upload & Data Extraction</h1>
-          <p className="text-muted-foreground">Module 4: Upload bank statements and extract transactions</p>
+          <p className="text-muted-foreground">Upload bank statements and extract transactions</p>
         </div>
       </div>
 
       {!showReview ? (
         <div className="grid grid-cols-2 gap-6">
-          {/* FR-4.1.1: Upload area */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle>Upload Bank Statement</CardTitle>
-              <CardDescription>FR-4.1.1: Drag-and-drop or select PDF file</CardDescription>
+              <CardDescription>Drag-and-drop or select PDF file</CardDescription>
             </CardHeader>
             <CardContent>
               <div
@@ -77,7 +76,6 @@ const DocumentUpload: React.FC = () => {
                     <Upload size={48} className="mx-auto mb-4 text-muted-foreground" />
                     <p className="text-lg font-medium">Drop PDF file here</p>
                     <p className="text-sm text-muted-foreground mt-2">or click to browse</p>
-                    {/* FR-4.1.2: File format validation */}
                     <p className="text-xs text-muted-foreground mt-4">Accepted: PDF only, max 10MB</p>
                   </>
                 )}
@@ -85,18 +83,16 @@ const DocumentUpload: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* FR-4.1.3, FR-4.1.4: Bank selection */}
           <Card className="border-2 border-foreground">
             <CardHeader>
               <CardTitle>Bank Configuration</CardTitle>
-              <CardDescription>FR-4.1.3: Automatic bank layout detection</CardDescription>
+              <CardDescription>Automatic bank layout detection</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="p-4 bg-secondary border-2 border-muted">
                 <p className="text-sm font-medium">Auto-Detection</p>
                 <p className="text-xs text-muted-foreground">System will automatically detect bank format</p>
               </div>
-              {/* FR-4.1.4: Manual override */}
               <div className="space-y-2">
                 <label className="text-sm font-medium">Manual Override (Optional)</label>
                 <Select>
@@ -115,7 +111,6 @@ const DocumentUpload: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* FR-4.2.1: Split-screen view */}
           <div className="grid grid-cols-2 gap-4">
             {/* PDF Preview */}
             <Card className="border-2 border-foreground">
@@ -136,11 +131,10 @@ const DocumentUpload: React.FC = () => {
               </CardContent>
             </Card>
 
-            {/* FR-4.2.2, FR-4.2.3: Extracted data grid */}
             <Card className="border-2 border-foreground">
               <CardHeader>
                 <CardTitle>Extracted Transactions</CardTitle>
-                <CardDescription>FR-4.2.2: Editable grid of extracted data</CardDescription>
+                <CardDescription>Editable grid of extracted data</CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -161,7 +155,6 @@ const DocumentUpload: React.FC = () => {
                           row.status === 'high' ? 'bg-chart-2/10' : row.status === 'low' ? 'bg-destructive/10' : 'bg-chart-4/10'
                         }`}
                       >
-                        {/* FR-4.4.1: Inline editing */}
                         <TableCell>
                           <Input
                             type="date"
@@ -185,13 +178,11 @@ const DocumentUpload: React.FC = () => {
                         <TableCell>{getConfidenceBadge(row.confidence, row.status)}</TableCell>
                         <TableCell>
                           <div className="flex gap-1">
-                            {/* FR-4.3.3: Flag anomalies */}
                             {row.status === 'low' && (
                               <Button variant="outline" size="icon" className="h-8 w-8">
                                 <AlertCircle size={14} className="text-destructive" />
                               </Button>
                             )}
-                            {/* FR-4.4.3: Delete invalid rows */}
                             <Button variant="outline" size="icon" className="h-8 w-8">
                               <Trash2 size={14} />
                             </Button>
@@ -202,7 +193,6 @@ const DocumentUpload: React.FC = () => {
                   </TableBody>
                 </Table>
 
-                {/* FR-4.4.2: Add missing rows */}
                 <Button variant="outline" size="sm" className="mt-4">
                   + Add Missing Row
                 </Button>
@@ -210,7 +200,6 @@ const DocumentUpload: React.FC = () => {
             </Card>
           </div>
 
-          {/* FR-4.5: Finalize Extraction */}
           <Card className="border-2 border-foreground">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
@@ -232,12 +221,10 @@ const DocumentUpload: React.FC = () => {
                   <Button variant="outline" onClick={() => setShowReview(false)}>
                     Cancel
                   </Button>
-                  {/* FR-4.5.2: Batch approve */}
                   <Button variant="outline">
                     <Check size={18} className="mr-2" />
                     Approve All High-Confidence
                   </Button>
-                  {/* FR-4.5.3: Transfer to Transaction Management */}
                   <Button>
                     Import to Transactions
                   </Button>
