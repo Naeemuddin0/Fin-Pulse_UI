@@ -17,7 +17,6 @@ import {
   Bot,
   History,
   FileBarChart,
-  Bell,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -45,7 +44,6 @@ const modules = [
   { id: 13, name: 'Agent Centre', path: '/agent', icon: Bot },
   { id: 14, name: 'Audit Trail', path: '/audit', icon: History },
   { id: 15, name: 'Reports', path: '/reports', icon: FileBarChart },
-  { id: 16, name: 'Notifications', path: '/notifications', icon: Bell },
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed }) => {
