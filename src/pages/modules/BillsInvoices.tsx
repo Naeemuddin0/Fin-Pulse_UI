@@ -16,12 +16,15 @@ const BillsInvoices: React.FC = () => {
   const [bills, setBills] = useState<Bill[]>(mockBills);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [lineItems, setLineItems] = useState([{ description: '', category: '', quantity: 1, unitPrice: 0 }]);
+  const [tax, setTax] = useState(0);
 
   const addLineItem = () => {
     setLineItems([...lineItems, { description: '', category: '', quantity: 1, unitPrice: 0 }]);
   };
 
   const calculateSubtotal = () => lineItems.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
+  const subtotal = calculateSubtotal();
+  const total = subtotal + tax;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -165,19 +168,27 @@ const BillsInvoices: React.FC = () => {
                 </Button>
               </div>
 
-              <div className="flex justify-end">
-                <div className="w-48 space-y-2">
-                  <div className="flex justify-between">
-                    <span>Subtotal:</span>
-                    <span className="font-medium">PKR {calculateSubtotal().toLocaleString()}</span>
+              <div className="flex justify-end pt-4 border-t border-gray-100">
+                <div className="w-64 space-y-3">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Subtotal</span>
+                    <span className="font-medium text-gray-900">PKR {subtotal.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Tax:</span>
-                    <span>PKR 0</span>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-500">Tax</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-400">PKR</span>
+                      <Input
+                        type="number"
+                        value={tax}
+                        onChange={(e) => setTax(Number(e.target.value))}
+                        className="w-24 h-8 text-right border-2 border-foreground"
+                      />
+                    </div>
                   </div>
-                  <div className="flex justify-between border-t-2 border-foreground pt-2">
-                    <span className="font-bold">Total:</span>
-                    <span className="font-bold">PKR {calculateSubtotal().toLocaleString()}</span>
+                  <div className="flex justify-between items-center pt-2 border-t-2 border-foreground">
+                    <span className="font-bold text-gray-900">Total</span>
+                    <span className="font-bold text-lg text-gray-900">PKR {total.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
