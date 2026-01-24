@@ -116,7 +116,43 @@ const VendorManagement: React.FC = () => {
           <TabsTrigger value="employees">Employees</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="vendors">
+        <TabsContent value="vendors" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card className="border-2 border-foreground bg-black text-white">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">Total Vendor Liability</p>
+                    <p className="text-2xl font-bold">PKR 740,000</p>
+                  </div>
+                  <TrendingUp size={32} className="opacity-50" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-2 border-foreground">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Active Vendors</p>
+                    <p className="text-2xl font-bold">{vendors.filter(v => v.status === 'active').length}</p>
+                  </div>
+                  <Users size={32} className="text-gray-300" />
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="border-2 border-foreground">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Avg. Monthly Spend</p>
+                    <p className="text-2xl font-bold">PKR 125,000</p>
+                  </div>
+                  <TrendingUp size={32} className="text-gray-300 rotate-90" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           <Card className="border-2 border-foreground">
             <CardHeader>
               <div className="flex items-center gap-4">
@@ -187,20 +223,64 @@ const VendorManagement: React.FC = () => {
 
         <TabsContent value="employees">
           <Card className="border-2 border-foreground">
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle className="flex items-center gap-2">
                 <Users size={20} />
                 Employee Directory
               </CardTitle>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="sm">
+                    <Plus size={16} className="mr-2" />
+                    Add Employee
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="border-2 border-foreground">
+                  <DialogHeader>
+                    <DialogTitle>Register New Employee</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-bold uppercase">Full Name</Label>
+                      <Input className="border-2 border-foreground" placeholder="e.g. Ahmed Khan" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-xs font-bold uppercase">Department</Label>
+                        <Select>
+                          <SelectTrigger className="border-2 border-foreground">
+                            <SelectValue placeholder="Select Dept" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="finance">Finance</SelectItem>
+                            <SelectItem value="operations">Operations</SelectItem>
+                            <SelectItem value="hr">Human Resources</SelectItem>
+                            <SelectItem value="it">Technology</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs font-bold uppercase">Designation</Label>
+                        <Input className="border-2 border-foreground" placeholder="e.g. Manager" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs font-bold uppercase">Contact Email</Label>
+                      <Input type="email" className="border-2 border-foreground" placeholder="employee@finpulse.com" />
+                    </div>
+                    <div className="flex justify-end gap-2 pt-4">
+                      <Button variant="outline">Cancel</Button>
+                      <Button className="bg-black text-white px-8">Save Employee</Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <Users size={48} className="mx-auto mb-4 opacity-50" />
-                <p>No employees added yet.</p>
-                <Button className="mt-4">
-                  <Plus size={18} className="mr-2" />
-                  Add Employee
-                </Button>
+              <div className="text-center py-12 text-muted-foreground border-2 border-dashed border-gray-100 rounded-lg">
+                <Users size={48} className="mx-auto mb-4 opacity-20" />
+                <h3 className="text-lg font-bold text-black mb-1">No employees found</h3>
+                <p className="text-sm max-w-[200px] mx-auto mb-6">Start by adding your first employee to for expense attribution.</p>
               </div>
             </CardContent>
           </Card>

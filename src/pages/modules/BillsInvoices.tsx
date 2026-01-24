@@ -248,17 +248,58 @@ const BillsInvoices: React.FC = () => {
                 <TableBody>
                   {bills.map((bill) => (
                     <TableRow key={bill.id} className="border-b border-muted">
-                      <TableCell className="font-medium">{bill.reference}</TableCell>
-                      <TableCell>{bill.vendorName}</TableCell>
-                      <TableCell>{bill.issueDate}</TableCell>
-                      <TableCell>{bill.dueDate}</TableCell>
-                      <TableCell>PKR {bill.total.toLocaleString()}</TableCell>
-                      <TableCell>PKR {bill.amountPaid.toLocaleString()}</TableCell>
+                      <TableCell className="font-medium text-[11px]">{bill.reference}</TableCell>
+                      <TableCell className="font-bold text-xs">{bill.vendorName}</TableCell>
+                      <TableCell className="text-xs">{bill.issueDate}</TableCell>
+                      <TableCell className="text-xs">{bill.dueDate}</TableCell>
+                      <TableCell className="font-bold text-xs">PKR {bill.total.toLocaleString()}</TableCell>
+                      <TableCell className="text-xs text-gray-400">PKR {bill.amountPaid.toLocaleString()}</TableCell>
                       <TableCell>{getStatusBadge(bill.status)}</TableCell>
                       <TableCell>
-                        {bill.status !== 'paid' && (
-                          <Button variant="outline" size="sm">Record Payment</Button>
-                        )}
+                        <div className="flex gap-2">
+                          {bill.status !== 'paid' && (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline" size="sm" className="h-7 text-[10px] font-bold uppercase border-2 border-foreground">
+                                  Pay
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="border-2 border-foreground">
+                                <DialogHeader>
+                                  <DialogTitle>Record Payment for {bill.reference}</DialogTitle>
+                                </DialogHeader>
+                                <div className="space-y-4">
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                      <Label className="text-xs uppercase font-bold">Payment Amount</Label>
+                                      <Input type="number" defaultValue={bill.total - bill.amountPaid} className="border-2 border-foreground" />
+                                    </div>
+                                    <div className="space-y-2">
+                                      <Label className="text-xs uppercase font-bold">Payment Date</Label>
+                                      <Input type="date" className="border-2 border-foreground" />
+                                    </div>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label className="text-xs uppercase font-bold">Source Bank Account</Label>
+                                    <Select>
+                                      <SelectTrigger className="border-2 border-foreground">
+                                        <SelectValue placeholder="Select Account" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="hbl">HBL Operating - ...4567</SelectItem>
+                                        <SelectItem value="meezan">Meezan Business - ...8901</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                  <div className="flex justify-end gap-2 pt-2">
+                                    <Button variant="outline">Details</Button>
+                                    <Button className="bg-black text-white px-8">Confirm Payment</Button>
+                                  </div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -268,27 +309,28 @@ const BillsInvoices: React.FC = () => {
           </Card>
 
           <Card className="border-2 border-foreground mt-4">
-            <CardHeader>
-              <CardTitle>Payables Aging Report</CardTitle>
-              <CardDescription>Outstanding debts by time buckets</CardDescription>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Accounts Payable Aging</CardTitle>
+              <CardDescription className="text-[10px] font-bold uppercase">Time-sensitive debt tracking</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-4 gap-4">
-                <div className="p-4 border-2 border-foreground text-center">
-                  <p className="text-sm text-muted-foreground">0-30 Days</p>
-                  <p className="text-2xl font-bold">PKR 33,500</p>
+                <div className="p-4 border-2 border-foreground bg-white hover:bg-gray-50 transition-colors">
+                  <p className="text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-widest">0-30 Days</p>
+                  <p className="text-xl font-bold">PKR 33,500</p>
+                  <div className="w-full h-1 bg-green-500 mt-3" />
                 </div>
-                <div className="p-4 border-2 border-muted text-center">
-                  <p className="text-sm text-muted-foreground">30-60 Days</p>
-                  <p className="text-2xl font-bold">PKR 0</p>
+                <div className="p-4 border-2 border-gray-100 bg-gray-50/50">
+                  <p className="text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-widest">30-60 Days</p>
+                  <p className="text-xl font-bold text-gray-300">PKR 0</p>
                 </div>
-                <div className="p-4 border-2 border-muted text-center">
-                  <p className="text-sm text-muted-foreground">60-90 Days</p>
-                  <p className="text-2xl font-bold">PKR 0</p>
+                <div className="p-4 border-2 border-gray-100 bg-gray-50/50">
+                  <p className="text-[10px] font-bold uppercase text-gray-400 mb-1 tracking-widest">60-90 Days</p>
+                  <p className="text-xl font-bold text-gray-300">PKR 0</p>
                 </div>
-                <div className="p-4 border-2 border-destructive text-center">
-                  <p className="text-sm text-muted-foreground">90+ Days</p>
-                  <p className="text-2xl font-bold text-destructive">PKR 0</p>
+                <div className="p-4 border-2 border-red-100 bg-red-50/30">
+                  <p className="text-[10px] font-bold uppercase text-red-400 mb-1 tracking-widest">90+ Days Critical</p>
+                  <p className="text-xl font-bold text-red-300">PKR 0</p>
                 </div>
               </div>
             </CardContent>

@@ -99,26 +99,35 @@ const Reconciliation: React.FC = () => {
                 {bankItems.map((item) => (
                   <TableRow
                     key={item.id}
-                    className={`border-b border-muted ${item.matched ? 'bg-chart-2/10' : ''} ${
-                      selectedBank.includes(item.id) ? 'bg-secondary' : ''
-                    }`}
+                    className={`border-b border-gray-100 transition-colors h-14 ${item.matched ? 'bg-green-50/30' : selectedBank.includes(item.id) ? 'bg-gray-50' : ''
+                      }`}
                   >
                     <TableCell>
                       <Checkbox
                         checked={selectedBank.includes(item.id)}
                         onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedBank([...selectedBank, item.id]);
-                          } else {
-                            setSelectedBank(selectedBank.filter((id) => id !== item.id));
-                          }
+                          if (checked) setSelectedBank([...selectedBank, item.id]);
+                          else setSelectedBank(selectedBank.filter((id) => id !== item.id));
                         }}
                         disabled={item.matched}
+                        className="border-2 border-foreground data-[state=checked]:bg-black"
                       />
                     </TableCell>
-                    <TableCell className="text-sm">{item.date}</TableCell>
-                    <TableCell className="text-sm font-medium">{item.description}</TableCell>
-                    <TableCell className="text-sm">PKR {item.amount.toLocaleString()}</TableCell>
+                    <TableCell className="text-[11px] font-bold">{item.date}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-bold uppercase tracking-tight">{item.description}</span>
+                        {item.matched && item.confidence > 90 && (
+                          <span className="text-[9px] font-bold text-green-600 uppercase flex items-center gap-1 mt-0.5">
+                            <CheckCircle size={10} /> Auto-Match Found
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-xs font-bold leading-none">
+                      <span className="text-[9px] text-gray-400 block mb-0.5 font-bold uppercase">Amount</span>
+                      PKR {item.amount.toLocaleString()}
+                    </TableCell>
                     <TableCell>{getConfidenceBadge(item.confidence)}</TableCell>
                   </TableRow>
                 ))}
@@ -127,64 +136,53 @@ const Reconciliation: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* Right: System Bills */}
-        <Card className="border-2 border-foreground">
-          <CardHeader>
+        {/* Right Side: System Records */}
+        <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col h-[500px]">
+          <CardHeader className="py-4 border-b-2 border-gray-100 flex-shrink-0">
             <div className="flex items-center justify-between">
-              <CardTitle>System Records</CardTitle>
-              <Select defaultValue="unreconciled">
-                <SelectTrigger className="w-40 border-2 border-foreground">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="unreconciled">Unreconciled</SelectItem>
-                  <SelectItem value="reconciled">Reconciled</SelectItem>
-                </SelectContent>
-              </Select>
+              <CardTitle className="text-lg">System Ledger</CardTitle>
+              <div className="bg-gray-100 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">
+                {systemItems.filter(s => !s.matched).length} Pending Items
+              </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 overflow-auto p-0">
             <Table>
-              <TableHeader>
-                <TableRow className="border-b-2 border-foreground">
+              <TableHeader className="bg-white sticky top-0 z-10">
+                <TableRow className="border-b-2 border-foreground h-11">
                   <TableHead className="w-10"></TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead className="text-[10px] font-bold text-black uppercase">Date</TableHead>
+                  <TableHead className="text-[10px] font-bold text-black uppercase">Reference</TableHead>
+                  <TableHead className="text-[10px] font-bold text-black uppercase">Ledger Amt</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {systemItems.map((item) => (
                   <TableRow
                     key={item.id}
-                    className={`border-b border-muted ${item.matched ? 'bg-chart-2/10' : ''} ${
-                      selectedSystem.includes(item.id) ? 'bg-secondary' : ''
-                    }`}
+                    className={`border-b border-gray-100 transition-colors h-14 ${item.matched ? 'bg-green-50/30' : selectedSystem.includes(item.id) ? 'bg-gray-50' : ''
+                      }`}
                   >
                     <TableCell>
                       <Checkbox
                         checked={selectedSystem.includes(item.id)}
                         onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedSystem([...selectedSystem, item.id]);
-                          } else {
-                            setSelectedSystem(selectedSystem.filter((id) => id !== item.id));
-                          }
+                          if (checked) setSelectedSystem([...selectedSystem, item.id]);
+                          else setSelectedSystem(selectedSystem.filter((id) => id !== item.id));
                         }}
                         disabled={item.matched}
+                        className="border-2 border-foreground data-[state=checked]:bg-black"
                       />
                     </TableCell>
-                    <TableCell className="text-sm">{item.date}</TableCell>
-                    <TableCell className="text-sm font-medium">{item.description}</TableCell>
-                    <TableCell className="text-sm">PKR {item.amount.toLocaleString()}</TableCell>
+                    <TableCell className="text-[11px] font-bold">{item.date}</TableCell>
                     <TableCell>
-                      {item.matched ? (
-                        <Badge className="bg-chart-2">Matched</Badge>
-                      ) : (
-                        <Badge variant="outline">Pending</Badge>
-                      )}
+                      <div className="flex flex-col">
+                        <span className="text-xs font-bold uppercase tracking-tight line-clamp-1">{item.description}</span>
+                        <span className="text-[9px] text-gray-400 font-bold uppercase">ID: {item.id}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-xs font-bold leading-none">
+                      PKR {item.amount.toLocaleString()}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -194,35 +192,63 @@ const Reconciliation: React.FC = () => {
         </Card>
       </div>
 
-      {(selectedBank.length > 0 || selectedSystem.length > 0) && (
-        <Card className="border-2 border-foreground">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <span className="text-sm">
-                  Selected: <strong>{selectedBank.length}</strong> bank items, <strong>{selectedSystem.length}</strong> system items
-                </span>
-                {selectedBank.length > 0 && selectedSystem.length > 0 && (
-                  <Badge variant="outline" className="gap-1">
-                    <AlertCircle size={14} />
-                    Totals must match
-                  </Badge>
-                )}
+      {/* Reconciliation Footer / Conflict Resolver */}
+      <div className={`mt-6 p-6 border-2 border-foreground transition-all flex items-center justify-between ${(selectedBank.length > 0 || selectedSystem.length > 0) ? 'bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] translate-y-[-4px]' : 'bg-gray-50 opacity-40 grayscale'
+        }`}>
+        <div className="flex gap-8 items-center font-bold">
+          <div className="flex flex-col border-r border-gray-200 pr-8">
+            <span className="text-[10px] uppercase text-gray-400">Bank Selection</span>
+            <span className="text-lg tracking-tighter">PKR {selectedBank.reduce((acc, id) => acc + (bankItems.find(b => b.id === id)?.amount || 0), 0).toLocaleString()}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[10px] uppercase text-gray-400">Ledger Selection</span>
+            <span className="text-lg tracking-tighter">PKR {selectedSystem.reduce((acc, id) => acc + (systemItems.find(s => s.id === id)?.amount || 0), 0).toLocaleString()}</span>
+          </div>
+          <div className={`px-3 py-1 text-[10px] uppercase tracking-widest ${selectedBank.reduce((acc, id) => acc + (bankItems.find(b => b.id === id)?.amount || 0), 0) ===
+            selectedSystem.reduce((acc, id) => acc + (systemItems.find(s => s.id === id)?.amount || 0), 0)
+            ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+            }`}>
+            {selectedBank.reduce((acc, id) => acc + (bankItems.find(b => b.id === id)?.amount || 0), 0) ===
+              selectedSystem.reduce((acc, id) => acc + (systemItems.find(s => s.id === id)?.amount || 0), 0)
+              ? 'Matches' : 'Variance Required'}
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-2 border-foreground font-bold uppercase text-[10px] tracking-widest h-12 px-8 hover:bg-black hover:text-white transition-all">
+                <Split size={14} className="mr-2" /> Split Fee
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="border-2 border-foreground">
+              <DialogHeader>
+                <DialogTitle className="uppercase font-bold tracking-tight">Record Bank Fee Split</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 pt-4">
+                <div className="p-4 bg-gray-50 border border-gray-200 text-xs font-bold uppercase tracking-tight text-gray-500">
+                  Splitting: UNKNOWN TRF (PKR 5,000)
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label className="text-[10px] font-bold uppercase">Principal Amount</Label>
+                    <Input className="border-2 border-foreground" defaultValue="4950" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-[10px] font-bold uppercase font-red-500">Bank Fee</Label>
+                    <Input className="border-2 border-foreground border-red-500" defaultValue="50" />
+                  </div>
+                </div>
+                <Button className="w-full bg-black text-white font-bold uppercase text-[11px] h-12 tracking-widest">Post Split Entry & Match</Button>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline">
-                  <Split size={18} className="mr-2" />
-                  Split (Bank Fee)
-                </Button>
-                <Button>
-                  <ArrowRight size={18} className="mr-2" />
-                  Match Selected
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+            </DialogContent>
+          </Dialog>
+
+          <Button className="bg-black text-white font-bold uppercase text-[10px] tracking-widest h-12 px-8 flex items-center gap-2">
+            Commit Match <Check size={14} />
+          </Button>
+        </div>
+      </div>
 
       <Card className="border-2 border-foreground">
         <CardHeader>

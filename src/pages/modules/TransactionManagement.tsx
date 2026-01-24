@@ -177,9 +177,8 @@ const TransactionManagement: React.FC = () => {
               {filteredTransactions.map((transaction) => (
                 <TableRow
                   key={transaction.id}
-                  className={`border-b border-muted ${
-                    transaction.status === 'uncategorized' ? 'bg-destructive/10' : ''
-                  }`}
+                  className={`border-b border-muted ${transaction.status === 'uncategorized' ? 'bg-destructive/10' : ''
+                    }`}
                 >
                   <TableCell>{transaction.date}</TableCell>
                   <TableCell className="font-medium">
@@ -187,23 +186,51 @@ const TransactionManagement: React.FC = () => {
                   </TableCell>
                   <TableCell>{transaction.vendor || '-'}</TableCell>
                   <TableCell>
-                    {transaction.status === 'uncategorized' ? (
-                      <div className="flex items-center gap-2">
-                        <AlertCircle size={16} className="text-destructive" />
-                        <Select onValueChange={(value) => handleCategorize(transaction.id, value)}>
-                          <SelectTrigger className="w-32 h-8 border-2 border-destructive">
-                            <SelectValue placeholder="Assign" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {categories.map((c) => (
-                              <SelectItem key={c} value={c}>{c}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    ) : (
-                      <Badge variant="outline">{transaction.category}</Badge>
-                    )}
+                    <div className="flex flex-col gap-2">
+                      {transaction.status === 'uncategorized' ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2">
+                            <Select onValueChange={(value) => handleCategorize(transaction.id, value)}>
+                              <SelectTrigger className="w-40 border-2 border-dashed border-gray-300 h-9">
+                                <SelectValue placeholder="Assign Vendor" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <div className="p-2 border-b border-gray-100 bg-blue-50/50">
+                                  <p className="text-[10px] font-bold uppercase text-blue-600 mb-1">AI Suggestion</p>
+                                  <SelectItem value="hbl" className="font-bold">HBL (Bank Fees)</SelectItem>
+                                </div>
+                                {mockVendors.map((v) => (
+                                  <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Select onValueChange={(value) => handleCategorize(transaction.id, value)}>
+                              <SelectTrigger className="w-40 border-2 border-foreground h-9">
+                                <SelectValue placeholder="Select Account" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <div className="p-2 border-b border-gray-100 bg-green-50/50">
+                                  <p className="text-[10px] font-bold uppercase text-green-600 mb-1">AI Suggestion</p>
+                                  <SelectItem value="utilities" className="font-bold">Utilities Expense</SelectItem>
+                                </div>
+                                {categories.map((c) => (
+                                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-xs font-bold text-gray-500 uppercase tracking-tighter">{transaction.vendor || 'Unknown Vendor'}</span>
+                          <Badge variant="outline" className="w-fit text-[10px] font-bold border-gray-200">
+                            {transaction.category}
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
                   </TableCell>
                   <TableCell className={transaction.type === 'credit' ? 'text-chart-2 font-medium' : 'text-destructive font-medium'}>
                     {transaction.type === 'credit' ? '+' : '-'}PKR {transaction.amount.toLocaleString()}

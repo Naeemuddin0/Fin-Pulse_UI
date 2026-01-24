@@ -211,9 +211,8 @@ const GeneralLedger: React.FC = () => {
                   return (
                     <div key={account.id}>
                       <div
-                        className={`flex items-center justify-between p-3 border-2 cursor-pointer hover:bg-secondary ${
-                          isExpanded ? 'border-foreground' : 'border-muted'
-                        }`}
+                        className={`flex items-center justify-between p-3 border-2 cursor-pointer hover:bg-secondary ${isExpanded ? 'border-foreground' : 'border-muted'
+                          }`}
                         onClick={() => hasChildren && toggleExpand(account.id)}
                       >
                         <div className="flex items-center gap-2">
@@ -338,24 +337,73 @@ const GeneralLedger: React.FC = () => {
         </TabsContent>
       </Tabs>
 
-      <Card className="border-2 border-foreground">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Lock size={20} />
-            Period Close
+      <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <Lock size={20} className="text-gray-400" />
+            Financial Period Closing
           </CardTitle>
-          <CardDescription>Lock financial records for a period</CardDescription>
+          <CardDescription className="text-xs font-bold uppercase tracking-widest">Year-End / Month-End Transition</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Current Period: January 2024</p>
-              <p className="text-sm text-muted-foreground">Closing this period will prevent any changes to entries before the closing date</p>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between p-4 bg-gray-50 border-2 border-foreground rounded-lg">
+            <div className="space-y-1">
+              <p className="font-bold text-sm uppercase">Current Active Period: Jan 2024</p>
+              <p className="text-[10px] text-gray-400 font-medium">Status: UNLOCKED - Transactions can be posted</p>
             </div>
-            <Button>
-              <Lock size={18} className="mr-2" />
-              Close Period
-            </Button>
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="bg-black text-white px-8 font-bold uppercase text-[10px] tracking-widest h-11">
+                  Launch Closing Wizard &rarr;
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="border-4 border-foreground max-w-xl">
+                <DialogHeader>
+                  <DialogTitle className="text-2xl font-black uppercase tracking-tighter italic">Period Closing Protocol</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6 pt-4">
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-3 bg-gray-50 border border-gray-100 rounded">
+                      <Checkbox className="mt-1" />
+                      <div>
+                        <p className="text-xs font-bold uppercase">Accounts Payable Check</p>
+                        <p className="text-[10px] text-gray-400 font-medium italic">Ensure all vendor bills for Jan 2024 are recorded and approved.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-gray-50 border border-gray-100 rounded">
+                      <Checkbox className="mt-1" defaultChecked />
+                      <div>
+                        <p className="text-xs font-bold uppercase">Bank Reconciliation</p>
+                        <p className="text-[10px] text-gray-400 font-medium italic">Reconcile HBL and Meezan operating accounts.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 bg-gray-50 border border-gray-100 rounded">
+                      <Checkbox className="mt-1" />
+                      <div>
+                        <p className="text-xs font-bold uppercase">Tax Report Finalization</p>
+                        <p className="text-[10px] text-gray-400 font-medium italic">Verify Sales Tax Liability for the period.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 border-2 border-dashed border-red-200 bg-red-50 rounded flex gap-4">
+                    <AlertTriangle size={24} className="text-red-500" />
+                    <p className="text-[10px] text-red-900 leading-relaxed font-bold uppercase">
+                      Warning: Closing the period is irreversible for standard users.
+                      Only the Audit Admin can reopen a closed period.
+                    </p>
+                  </div>
+
+                  <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Step 1 of 3</span>
+                    <Button className="bg-red-600 text-white px-10 font-bold uppercase text-[10px] h-12">
+                      Execute Period Close
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardContent>
       </Card>

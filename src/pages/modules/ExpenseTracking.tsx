@@ -1,9 +1,11 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { mockExpenseCategories } from '@/data/mockData';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { CheckCircle } from 'lucide-react';
 
 const COLORS = ['hsl(12, 76%, 61%)', 'hsl(173, 58%, 39%)', 'hsl(197, 37%, 24%)', 'hsl(43, 74%, 66%)', 'hsl(27, 87%, 67%)'];
 
@@ -15,49 +17,53 @@ const ExpenseTracking: React.FC = () => {
         <p className="text-muted-foreground">Monitor and analyze spending</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="border-2 border-foreground">
-          <CardHeader><CardTitle>Expense Distribution</CardTitle></CardHeader>
-          <CardContent>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={mockExpenseCategories} dataKey="amount" nameKey="category" cx="50%" cy="50%" outerRadius={80} label={({ category, percentage }) => `${percentage}%`}>
-                    {mockExpenseCategories.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value: number) => `PKR ${value.toLocaleString()}`} />
-                </PieChart>
-              </ResponsiveContainer>
+      <Card className="border-2 border-foreground">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-xl">Expense Verification Ledger</CardTitle>
+              <CardDescription className="text-[10px] font-bold uppercase tracking-widest">Audit-ready expense records</CardDescription>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-2 border-foreground">
-          <CardHeader><CardTitle>Category Thresholds</CardTitle></CardHeader>
-          <CardContent className="space-y-4">
-            {mockExpenseCategories.filter(c => c.threshold).map((cat, i) => {
-              const overBudget = cat.amount > (cat.threshold || 0);
-              return (
-                <div key={i} className={`p-3 border-2 ${overBudget ? 'border-destructive bg-destructive/10' : 'border-muted'}`}>
-                  <div className="flex justify-between mb-2">
-                    <span className="font-medium">{cat.category}</span>
-                    <Badge variant={overBudget ? 'destructive' : 'outline'}>
-                      {overBudget ? 'Over' : 'OK'}
-                    </Badge>
-                  </div>
-                  <Progress value={(cat.amount / (cat.threshold || 1)) * 100} className="h-2" />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                    <span>PKR {cat.amount.toLocaleString()}</span>
-                    <span>/ PKR {cat.threshold?.toLocaleString()}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </CardContent>
-        </Card>
-      </div>
+            <Button size="sm" className="bg-black text-white px-6 font-bold uppercase text-[10px]">
+              + Scan Receipt
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader className="bg-gray-50">
+              <TableRow className="border-b-2 border-foreground h-10">
+                <TableHead className="text-[10px] font-bold text-black uppercase">Date</TableHead>
+                <TableHead className="text-[10px] font-bold text-black uppercase">Category</TableHead>
+                <TableHead className="text-[10px] font-bold text-black uppercase">Amount</TableHead>
+                <TableHead className="text-[10px] font-bold text-black uppercase">Receipt</TableHead>
+                <TableHead className="text-[10px] font-bold text-black uppercase">Audit</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {[1, 2, 3].map(i => (
+                <TableRow key={i} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <TableCell className="text-xs font-bold">2024-01-{10 + i}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="text-[9px] font-bold uppercase py-0">Utilities</Badge>
+                  </TableCell>
+                  <TableCell className="text-xs font-bold">PKR {(15000 * i).toLocaleString()}</TableCell>
+                  <TableCell>
+                    <div className="w-10 h-10 bg-gray-100 border-2 border-foreground overflow-hidden cursor-zoom-in hover:scale-110 transition-transform flex items-center justify-center">
+                      <span className="text-[8px] font-black opacity-20 truncate px-1">BILL_{i}.PDF</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="ghost" size="sm" className="h-7 text-[9px] font-bold uppercase tracking-widest">
+                      View History
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 };

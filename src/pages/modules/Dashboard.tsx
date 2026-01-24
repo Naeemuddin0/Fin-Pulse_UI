@@ -47,29 +47,53 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-4 gap-4">
-        <Card className="border-2 border-foreground">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="border-2 border-foreground bg-black text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Cash Balance</p>
-            <p className="text-2xl font-bold">PKR {currentBalance.toLocaleString()}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Net Liquidity Position</p>
+                <p className="text-2xl font-bold">PKR {netLiquidity.toLocaleString()}</p>
+                <p className="text-[9px] text-green-400 mt-1 uppercase font-bold">Healthy Runway (142 Days)</p>
+              </div>
+              <Wallet size={32} className="opacity-40" />
+            </div>
           </CardContent>
         </Card>
         <Card className="border-2 border-foreground">
           <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Net Liquidity</p>
-            <p className="text-2xl font-bold text-chart-2">PKR {netLiquidity.toLocaleString()}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Reconciliation Health</p>
+                <p className="text-2xl font-bold text-red-500">2 Out of Sync</p>
+                <p className="text-[9px] text-gray-400 mt-1 uppercase font-bold">Gap: 12 days since last match</p>
+              </div>
+              <TrendingDown size={32} className="text-red-100" />
+            </div>
           </CardContent>
         </Card>
         <Card className="border-2 border-foreground">
           <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Total Inflows</p>
-            <p className="text-2xl font-bold text-chart-2">+PKR {totalInflow.toLocaleString()}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Cash Burn Rate</p>
+                <p className="text-2xl font-bold">PKR 124,500</p>
+                <p className="text-[9px] text-gray-400 mt-1 uppercase font-bold">Avg. Monthly Outflow</p>
+              </div>
+              <TrendingUp size={32} className="text-gray-100" />
+            </div>
           </CardContent>
         </Card>
-        <Card className="border-2 border-foreground">
+        <Card className="border-2 border-foreground bg-gray-50/50">
           <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground">Total Outflows</p>
-            <p className="text-2xl font-bold text-destructive">-PKR {totalOutflow.toLocaleString()}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Budget Utilization</p>
+            <div className="space-y-1">
+              <Progress value={(actualSpend / budgetTarget) * 100} className="h-1 bg-gray-200 rounded-none" />
+              <div className="flex justify-between text-[9px] font-bold uppercase">
+                <span>{Math.round((actualSpend / budgetTarget) * 100)}% Used</span>
+                <span className="text-gray-400">PKR {budgetTarget.toLocaleString()} Target</span>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
