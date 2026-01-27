@@ -124,6 +124,28 @@ const Onboarding: React.FC = () => {
                   className="border-2 border-foreground"
                 />
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase">Business Email</Label>
+                  <Input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    placeholder="contact@business.com"
+                    className="border-2 border-foreground"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase">Contact Number</Label>
+                  <Input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleChange('phone', e.target.value)}
+                    placeholder="+92-XXX-XXXXXXX"
+                    className="border-2 border-foreground"
+                  />
+                </div>
+              </div>
             </div>
           )}
 

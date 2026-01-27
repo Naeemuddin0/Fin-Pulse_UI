@@ -10,16 +10,16 @@ import { useApp } from '@/contexts/AppContext';
 const Signup: React.FC = () => {
   const [step, setStep] = useState<'form' | 'verification_sent' | 'verified'>('form');
   const [formData, setFormData] = useState<{
-    role: 'admin' | 'accountant' | 'viewer' | '';
     businessName: string;
-    username: string;
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     confirmPassword: string;
   }>({
-    role: '',
     businessName: '',
-    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -65,20 +65,6 @@ const Signup: React.FC = () => {
           {step === 'form' ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <Select value={formData.role} onValueChange={(value) => handleChange('role', value)}>
-                  <SelectTrigger className="border-2 border-foreground">
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin">Business Owner (Admin)</SelectItem>
-                    <SelectItem value="accountant">Accountant</SelectItem>
-                    <SelectItem value="viewer">Viewer</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="businessName">Business Name</Label>
                 <Input
                   id="businessName"
@@ -91,12 +77,24 @@ const Signup: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="username">Full Name</Label>
+                <Label htmlFor="firstName">First Name</Label>
                 <Input
-                  id="username"
-                  placeholder="Enter your name"
-                  value={formData.username}
-                  onChange={(e) => handleChange('username', e.target.value)}
+                  id="firstName"
+                  placeholder="Enter first name"
+                  value={formData.firstName}
+                  onChange={(e) => handleChange('firstName', e.target.value)}
+                  required
+                  className="border-2 border-foreground"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="lastName">Last Name</Label>
+                <Input
+                  id="lastName"
+                  placeholder="Enter last name"
+                  value={formData.lastName}
+                  onChange={(e) => handleChange('lastName', e.target.value)}
                   required
                   className="border-2 border-foreground"
                 />
@@ -153,7 +151,7 @@ const Signup: React.FC = () => {
               </p>
             </form>
           ) : step === 'verification_sent' ? (
-            <div className="space-y-6 text-center">
+            <div className="space-y-6">
               <div className="flex justify-center">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center border-2 border-foreground">
                   <svg className="w-8 h-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -161,14 +159,29 @@ const Signup: React.FC = () => {
                   </svg>
                 </div>
               </div>
-              <p className="text-sm text-gray-500">
-                Click the link in your inbox to verify your account and proceed to setup.
-              </p>
-              <Button variant="outline" className="w-full border-2 border-foreground" onClick={handleSimulateVerify}>
-                Simulate Link Click (Dev Only)
-              </Button>
-              <p className="text-xs text-gray-400">
-                Didn't receive code? <button className="underline font-medium hover:text-black">Resend</button>
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-4">
+                  We sent a verification code to {formData.email}
+                </p>
+              </div>
+              <form onSubmit={(e) => { e.preventDefault(); handleSimulateVerify(); }} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="otp">Enter OTP</Label>
+                  <Input
+                    id="otp"
+                    type="text"
+                    placeholder="Enter 6-digit code"
+                    maxLength={6}
+                    required
+                    className="border-2 border-foreground text-center text-lg tracking-widest"
+                  />
+                </div>
+                <Button type="submit" className="w-full bg-black text-white">
+                  Verify
+                </Button>
+              </form>
+              <p className="text-xs text-center text-gray-400">
+                Didn't receive code? <button type="button" className="underline font-medium hover:text-black">Resend</button>
               </p>
             </div>
           ) : (
@@ -190,7 +203,7 @@ const Signup: React.FC = () => {
           )}
         </CardContent>
       </Card>
-    </div>
+    </div >
   );
 };
 
