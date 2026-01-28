@@ -82,23 +82,15 @@ const VendorManagement: React.FC = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>Default Expense Category (GL Account)</Label>
-                  <Select>
-                    <SelectTrigger className="border-2 border-foreground">
-                      <SelectValue placeholder="Select GL account" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="utilities">Utilities</SelectItem>
-                      <SelectItem value="rent">Rent</SelectItem>
-                      <SelectItem value="software">Software</SelectItem>
-                      <SelectItem value="marketing">Marketing</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Bank Account</Label>
-                  <Input className="border-2 border-foreground" placeholder="PK45-XXXX-XXXX-XXXX" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Bank Name</Label>
+                    <Input className="border-2 border-foreground" placeholder="e.g. HBL, Meezan Bank" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Bank Account (IBAN)</Label>
+                    <Input className="border-2 border-foreground" placeholder="PK45-XXXX-XXXX-XXXX" />
+                  </div>
                 </div>
                 <div className="flex justify-end gap-2">
                   <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
@@ -117,42 +109,6 @@ const VendorManagement: React.FC = () => {
         </TabsList>
 
         <TabsContent value="vendors" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="border-2 border-foreground bg-black text-white">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider opacity-70">Total Vendor Liability</p>
-                    <p className="text-2xl font-bold">PKR 740,000</p>
-                  </div>
-                  <TrendingUp size={32} className="opacity-50" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-2 border-foreground">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Active Vendors</p>
-                    <p className="text-2xl font-bold">{vendors.filter(v => v.status === 'active').length}</p>
-                  </div>
-                  <Users size={32} className="text-gray-300" />
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-2 border-foreground">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Avg. Monthly Spend</p>
-                    <p className="text-2xl font-bold">PKR 125,000</p>
-                  </div>
-                  <TrendingUp size={32} className="text-gray-300 rotate-90" />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
           <Card className="border-2 border-foreground">
             <CardHeader>
               <div className="flex items-center gap-4">
@@ -204,9 +160,6 @@ const VendorManagement: React.FC = () => {
                         <div className="flex gap-2">
                           <Button variant="outline" size="icon">
                             <Edit size={16} />
-                          </Button>
-                          <Button variant="outline" size="icon">
-                            <TrendingUp size={16} />
                           </Button>
                           <Button variant="outline" size="icon" onClick={() => handleArchive(vendor.id)}>
                             <Archive size={16} />
@@ -263,10 +216,6 @@ const VendorManagement: React.FC = () => {
                         <Label className="text-xs font-bold uppercase">Designation</Label>
                         <Input className="border-2 border-foreground" placeholder="e.g. Manager" />
                       </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-xs font-bold uppercase">Contact Email</Label>
-                      <Input type="email" className="border-2 border-foreground" placeholder="employee@finpulse.com" />
                     </div>
                     <div className="flex justify-end gap-2 pt-4">
                       <Button variant="outline">Cancel</Button>

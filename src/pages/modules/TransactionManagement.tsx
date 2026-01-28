@@ -15,7 +15,6 @@ const TransactionManagement: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [categoryFilter, setCategoryFilter] = useState('all');
   const [isManualEntryOpen, setIsManualEntryOpen] = useState(false);
 
   const filteredTransactions = transactions.filter((t) => {
@@ -23,8 +22,7 @@ const TransactionManagement: React.FC = () => {
       t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       t.amount.toString().includes(searchTerm);
     const matchesStatus = statusFilter === 'all' || t.status === statusFilter;
-    const matchesCategory = categoryFilter === 'all' || t.category === categoryFilter;
-    return matchesSearch && matchesStatus && matchesCategory;
+    return matchesSearch && matchesStatus;
   });
 
   const handleApprove = (id: string) => {
@@ -113,6 +111,18 @@ const TransactionManagement: React.FC = () => {
                 <Label>Description</Label>
                 <Input className="border-2 border-foreground" placeholder="Transaction description" />
               </div>
+              <div className="space-y-2">
+                <Label>Target Bank Account *</Label>
+                <Select>
+                  <SelectTrigger className="border-2 border-foreground">
+                    <SelectValue placeholder="Select bank account" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="main">Main Account - HBL</SelectItem>
+                    <SelectItem value="savings">Savings - Meezan Bank</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={() => setIsManualEntryOpen(false)}>Cancel</Button>
                 <Button onClick={() => setIsManualEntryOpen(false)}>Save Transaction</Button>
@@ -144,17 +154,6 @@ const TransactionManagement: React.FC = () => {
                 <SelectItem value="approved">Approved</SelectItem>
                 <SelectItem value="reconciled">Reconciled</SelectItem>
                 <SelectItem value="uncategorized">Uncategorized</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-40 border-2 border-foreground">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
-                ))}
               </SelectContent>
             </Select>
           </div>

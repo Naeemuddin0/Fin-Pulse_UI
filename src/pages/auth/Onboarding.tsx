@@ -14,13 +14,14 @@ import { Check } from 'lucide-react';
 const Onboarding: React.FC = () => {
   const [step, setStep] = useState(1);
   const totalSteps = 4;
-  const [formData, setFormData] = useState<CompanyProfile & { industry: string }>({
+  const [formData, setFormData] = useState<CompanyProfile & { industry: string; fiscalYearEnd?: string }>({
     name: '',
     address: '',
     phone: '',
     email: '',
     industry: '',
     fiscalYearStart: '',
+    fiscalYearEnd: '',
     currency: 'PKR',
     chartOfAccountsTemplate: 'services',
     openingCashBalance: 0,
@@ -95,25 +96,19 @@ const Onboarding: React.FC = () => {
                   className="border-2 border-foreground h-12"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase">Industry Type</Label>
-                  <Select value={formData.industry} onValueChange={(v) => handleChange('industry', v)}>
-                    <SelectTrigger className="border-2 border-foreground h-12">
-                      <SelectValue placeholder="Select industry" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="retail">Retail</SelectItem>
-                      <SelectItem value="services">Professional Services</SelectItem>
-                      <SelectItem value="manufacturing">Manufacturing</SelectItem>
-                      <SelectItem value="it">Technology/SaaS</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase">Base Currency</Label>
-                  <Input value="PKR - Pakistani Rupee" disabled className="bg-gray-50 border-2 border-gray-200 h-12 font-medium" />
-                </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Business Type</Label>
+                <Select value={formData.industry} onValueChange={(v) => handleChange('industry', v)}>
+                  <SelectTrigger className="border-2 border-foreground h-12">
+                    <SelectValue placeholder="Select business type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="retail">Retail</SelectItem>
+                    <SelectItem value="services">Professional Services</SelectItem>
+                    <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                    <SelectItem value="it">Technology/SaaS</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase">Business Address</Label>
@@ -164,21 +159,18 @@ const Onboarding: React.FC = () => {
                     />
                   </div>
                   <div className="pt-6 text-gray-400">&rarr;</div>
-                  <div className="flex-1 space-y-2 text-right">
+                  <div className="flex-1 space-y-2">
                     <Label className="text-xs font-bold uppercase">Fiscal Year End</Label>
-                    <div className="h-10 flex items-center justify-end font-bold text-black px-3 border-2 border-gray-100 rounded-md bg-white">
-                      {fiscalYearEnd || 'Set Start Date'}
-                    </div>
+                    <Input
+                      type="date"
+                      value={formData.fiscalYearEnd || ''}
+                      onChange={(e) => handleChange('fiscalYearEnd', e.target.value)}
+                      className="border-2 border-foreground bg-white"
+                    />
                   </div>
                 </div>
               </div>
-              <div className="bg-blue-50 border-2 border-blue-200 p-4 rounded-lg flex gap-3">
-                <div className="text-blue-500 font-bold mt-1 text-lg">!</div>
-                <p className="text-xs text-blue-900 leading-relaxed font-medium">
-                  The fiscal year end is automatically calculated as 12 months from your start date.
-                  This will determine your tax and reporting periods.
-                </p>
-              </div>
+
             </div>
           )}
 
@@ -207,6 +199,14 @@ const Onboarding: React.FC = () => {
                     </p>
                   </div>
                 ))}
+              </div>
+              <div className="space-y-3 mt-6">
+                <Label className="text-xs font-bold uppercase">Manage Accounts</Label>
+                <div className="flex gap-2">
+                  <Button type="button" variant="outline" className="border-2 border-foreground">+ Add New Ledger</Button>
+                  <Button type="button" variant="outline" className="border-2 border-foreground">Edit Account</Button>
+                  <Button type="button" variant="outline" className="border-2 border-foreground">Delete Account</Button>
+                </div>
               </div>
             </div>
           )}
@@ -237,6 +237,19 @@ const Onboarding: React.FC = () => {
                       onChange={(e) => handleChange('openingBankBalance', Number(e.target.value))}
                       className="border-2 border-foreground font-mono"
                     />
+                  </div>
+                </div>
+                <div className="space-y-3 mt-4">
+                  <Label className="text-[10px] font-bold uppercase">Balance Type</Label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="balanceType" value="debit" defaultChecked className="border-2 border-foreground" />
+                      <span className="text-sm font-medium">Debit</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="balanceType" value="credit" className="border-2 border-foreground" />
+                      <span className="text-sm font-medium">Credit</span>
+                    </label>
                   </div>
                 </div>
               </div>
