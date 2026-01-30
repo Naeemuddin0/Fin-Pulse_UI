@@ -18,12 +18,17 @@ const DocumentUpload: React.FC = () => {
 
   // Mock extracted transactions
   const mockExtracted = [
-    { id: '1', date: '2024-01-15', description: 'ELECTRICITY PAYMENT', amount: 15000, confidence: 95, status: 'high' },
-    { id: '2', date: '2024-01-14', description: 'OFFICE SUPPLIES', amount: 25000, confidence: 88, status: 'high' },
-    { id: '3', date: '2024-01-13', description: 'DEPOSIT ABC CORP', amount: 150000, confidence: 92, status: 'high' },
-    { id: '4', date: '2024-01-12', description: 'UNKNOWN TRF', amount: 5000, confidence: 45, status: 'low' },
-    { id: '5', date: '2024-01-11', description: 'BANK CHRGS', amount: 500, confidence: 72, status: 'medium' },
+    { id: '1', date: '2024-01-15', description: 'ELECTRICITY PAYMENT', amount: 15000, confidence: 95, status: 'high', type: 'Utility' },
+    { id: '2', date: '2024-01-14', description: 'OFFICE SUPPLIES', amount: 25000, confidence: 88, status: 'high', type: 'Office' },
+    { id: '3', date: '2024-01-13', description: 'DEPOSIT ABC CORP', amount: 150000, confidence: 92, status: 'high', type: 'Revenue' },
+    { id: '4', date: '2024-01-12', description: 'UNKNOWN TRF', amount: 5000, confidence: 45, status: 'low', type: 'Other' },
+    { id: '5', date: '2024-01-11', description: 'BANK CHRGS', amount: 500, confidence: 72, status: 'medium', type: 'Fee' },
   ];
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  const toggleRow = (id: string) => {
+    setSelectedRows(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  };
 
   const handleFileUpload = () => {
     // FR-4.1.2: Validate file format
@@ -105,8 +110,7 @@ const DocumentUpload: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-bold uppercase text-gray-500">Manual Template Override</Label>
+              <div className="flex gap-2">
                 <Select>
                   <SelectTrigger className="border-2 border-foreground h-11">
                     <SelectValue placeholder="Select institution if auto-detect fails" />
@@ -117,6 +121,7 @@ const DocumentUpload: React.FC = () => {
                     ))}
                   </SelectContent>
                 </Select>
+                <Button variant="outline" className="border-2 border-foreground">Apply Format</Button>
               </div>
             </CardContent>
           </Card>
@@ -163,9 +168,16 @@ const DocumentUpload: React.FC = () => {
                 <Table>
                   <TableHeader className="bg-gray-50">
                     <TableRow className="border-b-2 border-foreground h-10">
+                      <TableHead className="w-10">
+                        <input type="checkbox" onChange={(e) => {
+                          if (e.target.checked) setSelectedRows(extractedData.map(r => r.id));
+                          else setSelectedRows([]);
+                        }} />
+                      </TableHead>
                       <TableHead className="text-[10px] font-bold uppercase text-black">Date</TableHead>
-                      <TableHead className="text-[10px] font-bold uppercase text-black">Statement Desc</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase text-black">Description</TableHead>
                       <TableHead className="text-[10px] font-bold uppercase text-black">Amount</TableHead>
+                      <TableHead className="text-[10px] font-bold uppercase text-black">Type</TableHead>
                       <TableHead className="text-[10px] font-bold uppercase text-black">Confidence</TableHead>
                       <TableHead className="text-[10px] font-bold uppercase text-black w-10"></TableHead>
                     </TableRow>
@@ -177,6 +189,13 @@ const DocumentUpload: React.FC = () => {
                         className={`border-b border-gray-100 hover:bg-gray-50 group transition-colors ${row.status === 'low' ? 'bg-red-50/50' : ''
                           }`}
                       >
+                        <TableCell className="py-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedRows.includes(row.id)}
+                            onChange={() => toggleRow(row.id)}
+                          />
+                        </TableCell>
                         <TableCell className="py-2">
                           <input
                             type="text"
@@ -200,6 +219,13 @@ const DocumentUpload: React.FC = () => {
                               className="bg-transparent border-none focus:ring-0 text-xs font-bold w-full"
                             />
                           </div>
+                        </TableCell>
+                        <TableCell className="py-2">
+                          <input
+                            type="text"
+                            defaultValue={row.type}
+                            className="bg-transparent border-none focus:ring-0 text-xs w-full"
+                          />
                         </TableCell>
                         <TableCell className="py-2">
                           <div className={`text-[10px] font-bold px-2 py-0.5 rounded border-2 ${row.status === 'high' ? 'bg-green-50 text-green-700 border-green-100' :
@@ -249,8 +275,11 @@ const DocumentUpload: React.FC = () => {
               <Button variant="outline" onClick={() => setShowReview(false)} className="border-2 border-foreground font-bold uppercase tracking-widest text-[10px] px-6">
                 Restart
               </Button>
+              <Button variant="outline" disabled={selectedRows.length === 0} className="border-2 border-foreground font-bold uppercase tracking-widest text-[10px] px-6 bg-green-50">
+                Verify Selected ({selectedRows.length})
+              </Button>
               <Button className="bg-black text-white font-bold uppercase tracking-widest text-[10px] px-8 h-12">
-                Commit to Transactions &rarr;
+                Import to Transaction Management &rarr;
               </Button>
             </div>
           </div>
