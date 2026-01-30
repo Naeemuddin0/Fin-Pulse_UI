@@ -38,10 +38,6 @@ const VendorManagement: React.FC = () => {
           <p className="text-muted-foreground">Manage vendors and employees</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Upload size={18} className="mr-2" />
-            Import CSV
-          </Button>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>
@@ -158,12 +154,108 @@ const VendorManagement: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button variant="outline" size="icon">
-                            <Edit size={16} />
-                          </Button>
-                          <Button variant="outline" size="icon" onClick={() => handleArchive(vendor.id)}>
-                            <Archive size={16} />
-                          </Button>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="icon" onClick={() => setSelectedVendor(vendor)}>
+                                <TrendingUp size={16} />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="border-2 border-foreground max-w-2xl">
+                              <DialogHeader>
+                                <DialogTitle>Historical Analytics: {vendor.name}</DialogTitle>
+                              </DialogHeader>
+                              <div className="grid grid-cols-2 gap-4 my-4">
+                                <div className="p-4 border-2 border-foreground bg-green-50">
+                                  <p className="text-[10px] font-bold uppercase text-green-700">Total Spend</p>
+                                  <p className="text-2xl font-bold">PKR {vendor.totalSpend.toLocaleString()}</p>
+                                </div>
+                                <div className="p-4 border-2 border-foreground bg-blue-50">
+                                  <p className="text-[10px] font-bold uppercase text-blue-700">Avg Transaction Value</p>
+                                  <p className="text-2xl font-bold">PKR {vendor.avgTransactionValue.toLocaleString()}</p>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <p className="text-xs font-bold uppercase">Transaction History</p>
+                                <div className="border-2 border-foreground rounded-lg overflow-hidden">
+                                  <Table>
+                                    <TableHeader className="bg-muted">
+                                      <TableRow>
+                                        <TableHead className="h-8 text-[10px] font-bold">Date</TableHead>
+                                        <TableHead className="h-8 text-[10px] font-bold">Description</TableHead>
+                                        <TableHead className="h-8 text-[10px] font-bold text-right">Amount</TableHead>
+                                      </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                      <TableRow>
+                                        <TableCell className="py-2 text-[11px]">2024-01-10</TableCell>
+                                        <TableCell className="py-2 text-[11px]">Monthly Supplies</TableCell>
+                                        <TableCell className="py-2 text-[11px] text-right font-bold">PKR 15,000</TableCell>
+                                      </TableRow>
+                                      <TableRow>
+                                        <TableCell className="py-2 text-[11px]">2023-12-05</TableCell>
+                                        <TableCell className="py-2 text-[11px]">Inventory Bulk</TableCell>
+                                        <TableCell className="py-2 text-[11px] text-right font-bold">PKR 85,000</TableCell>
+                                      </TableRow>
+                                    </TableBody>
+                                  </Table>
+                                </div>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="icon">
+                                <Edit size={16} />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="border-2 border-foreground">
+                              <DialogHeader>
+                                <DialogTitle>Edit Vendor: {vendor.name}</DialogTitle>
+                              </DialogHeader>
+                              <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label>Bank Name</Label>
+                                    <Input defaultValue="HBL" className="border-2 border-foreground" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label>Bank Account (IBAN)</Label>
+                                    <Input defaultValue="PK45HBL..." className="border-2 border-foreground" />
+                                  </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label>Contact Number</Label>
+                                    <Input defaultValue={vendor.phone} className="border-2 border-foreground" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label>Email Address</Label>
+                                    <Input defaultValue={vendor.email} className="border-2 border-foreground" />
+                                  </div>
+                                </div>
+                                <Button className="w-full bg-black text-white">Update Vendor</Button>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="icon" className="hover:bg-destructive hover:text-destructive-foreground">
+                                <Archive size={16} />
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="border-2 border-foreground">
+                              <DialogHeader>
+                                <DialogTitle>Archive Vendor?</DialogTitle>
+                              </DialogHeader>
+                              <p className="text-sm text-muted-foreground">Are you sure you want to archive <strong>{vendor.name}</strong>? This will hide them from active lists.</p>
+                              <div className="flex justify-end gap-2 mt-4">
+                                <Button variant="outline">Cancel</Button>
+                                <Button variant="destructive" onClick={() => handleArchive(vendor.id)}>Confirm Archive</Button>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -226,11 +318,42 @@ const VendorManagement: React.FC = () => {
               </Dialog>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-12 text-muted-foreground border-2 border-dashed border-gray-100 rounded-lg">
-                <Users size={48} className="mx-auto mb-4 opacity-20" />
-                <h3 className="text-lg font-bold text-black mb-1">No employees found</h3>
-                <p className="text-sm max-w-[200px] mx-auto mb-6">Start by adding your first employee to for expense attribution.</p>
-              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-b-2 border-foreground">
+                    <TableHead>Employee Name</TableHead>
+                    <TableHead>Department</TableHead>
+                    <TableHead>Designation</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow className="border-b border-muted">
+                    <TableCell className="font-medium">Ahmed Khan</TableCell>
+                    <TableCell>Finance</TableCell>
+                    <TableCell>Accountant</TableCell>
+                    <TableCell><Badge>Active</Badge></TableCell>
+                    <TableCell className="text-right">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="icon" className="h-8 w-8 text-destructive">
+                            <Archive size={14} />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="border-2 border-foreground">
+                          <DialogHeader><DialogTitle>Archive Employee?</DialogTitle></DialogHeader>
+                          <p className="text-sm text-muted-foreground">Are you sure you want to archive this employee profile?</p>
+                          <div className="flex justify-end gap-2 mt-4">
+                            <Button variant="outline">Cancel</Button>
+                            <Button variant="destructive">Confirm Archive</Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </TabsContent>

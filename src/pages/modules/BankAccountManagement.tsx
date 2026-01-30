@@ -15,8 +15,9 @@ import { Plus, Landmark, CreditCard, Wallet, PiggyBank, Search, History, Edit, A
 const BankAccountManagement: React.FC = () => {
   const [accounts, setAccounts] = useState<BankAccount[]>(mockBankAccounts);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
+  const [accountToArchive, setAccountToArchive] = useState<string | null>(null);
   const [selectedAccount, setSelectedAccount] = useState<BankAccount | null>(null);
-  const [showHistory, setShowHistory] = useState(false);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
@@ -72,6 +73,10 @@ const BankAccountManagement: React.FC = () => {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Account Title</Label>
+                <Input className="border-2 border-foreground" placeholder="e.g. Operating Account - Primary" />
               </div>
               <div className="space-y-2">
                 <Label>Account Number / IBAN</Label>
@@ -139,9 +144,20 @@ const BankAccountManagement: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+        <Card className="border-2 border-foreground">
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Petty Cash Total</p>
+                <p className="text-2xl font-bold">PKR {accounts.filter(a => a.category === 'petty_cash').reduce((sum, a) => sum + a.currentBalance, 0).toLocaleString()}</p>
+              </div>
+              <Wallet size={32} className="text-orange-100" />
+            </div>
+          </CardContent>
+        </Card>
         <Card className="border-2 border-foreground bg-gray-50/50">
           <CardContent className="pt-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Composition</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Liquidity Score</p>
             <div className="space-y-1">
               <Progress value={(totalCash / (totalCash + (totalCredit || 1))) * 100} className="h-1 bg-gray-200 rounded-none" />
               <div className="flex justify-between text-[9px] font-bold uppercase">
@@ -187,14 +203,28 @@ const BankAccountManagement: React.FC = () => {
 
               <div className="flex gap-2 pt-2 border-t border-gray-50">
                 <Button variant="outline" size="sm" className="flex-1 h-8 text-[10px] font-bold uppercase border-2 border-foreground">
-                  Ingest Stmt
+                  View Details
                 </Button>
                 <Button variant="outline" size="icon" className="h-8 w-8 border-2 border-foreground">
                   <Edit size={14} />
                 </Button>
-                <Button variant="outline" size="icon" className="h-8 w-8 border-red-200 text-red-500 hover:bg-red-50 hover:border-red-500">
-                  <Archive size={14} />
-                </Button>
+                <Dialog open={isArchiveDialogOpen} onOpenChange={setIsArchiveDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="icon" className="h-8 w-8 border-red-200 text-red-500 hover:bg-red-50 hover:border-red-500" onClick={() => setAccountToArchive(account.id)}>
+                      <Archive size={14} />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="border-2 border-foreground">
+                    <DialogHeader>
+                      <DialogTitle>Confirm Archive</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm py-4 italic">Are you sure you want to archive this account? All associated records will remain but the account will be hidden from active lists.</p>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setIsArchiveDialogOpen(false)}>Cancel</Button>
+                      <Button className="bg-red-600 text-white font-bold uppercase text-[10px]" onClick={() => setIsArchiveDialogOpen(false)}>Confirm Archive</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardContent>
           </Card>
