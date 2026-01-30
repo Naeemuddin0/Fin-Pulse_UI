@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { mockAccounts, mockJournalEntries } from '@/data/mockData';
 import { Account, JournalEntry } from '@/types';
@@ -17,6 +18,7 @@ const GeneralLedger: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>(mockAccounts);
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>(mockJournalEntries);
   const [isJournalOpen, setIsJournalOpen] = useState(false);
+  const [isAccountDialogOpen, setIsAccountDialogOpen] = useState(false);
   const [expandedAccounts, setExpandedAccounts] = useState<string[]>(['1', '3', '7']);
   const [journalLines, setJournalLines] = useState([
     { accountId: '', debit: 0, credit: 0 },
@@ -48,10 +50,48 @@ const GeneralLedger: React.FC = () => {
           <p className="text-muted-foreground">Chart of Accounts & Journal Entries</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Plus size={18} className="mr-2" />
-            New Account
-          </Button>
+          <Dialog open={isAccountDialogOpen} onOpenChange={setIsAccountDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-2 border-foreground">
+                <Plus size={18} className="mr-2" />
+                New Account
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="border-2 border-foreground max-w-md">
+              <DialogHeader>
+                <DialogTitle>Add New Ledger Account</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label>Account Category</Label>
+                  <Select>
+                    <SelectTrigger className="border-2 border-foreground">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="asset">Asset</SelectItem>
+                      <SelectItem value="liability">Liability</SelectItem>
+                      <SelectItem value="equity">Equity</SelectItem>
+                      <SelectItem value="revenue">Revenue</SelectItem>
+                      <SelectItem value="expense">Expense</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Account Name</Label>
+                  <Input className="border-2 border-foreground" placeholder="e.g. Sales Revenue" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Account Code</Label>
+                  <Input className="border-2 border-foreground" placeholder="e.g. 4001" />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsAccountDialogOpen(false)}>Cancel</Button>
+                  <Button onClick={() => setIsAccountDialogOpen(false)}>Create Account</Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
           <Dialog open={isJournalOpen} onOpenChange={setIsJournalOpen}>
             <DialogTrigger asChild>
               <Button>
@@ -250,7 +290,22 @@ const GeneralLedger: React.FC = () => {
         <TabsContent value="journal">
           <Card className="border-2 border-foreground">
             <CardHeader>
-              <CardTitle>Journal Entries</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle>Journal Entries</CardTitle>
+                <div className="flex gap-2">
+                  <Input type="date" className="w-40 border-2 border-foreground h-9" />
+                  <Select>
+                    <SelectTrigger className="w-48 border-2 border-foreground h-9">
+                      <SelectValue placeholder="All Accounts" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Accounts</SelectItem>
+                      {accounts.map(a => <SelectItem key={a.id} value={a.id}>{a.code} - {a.name}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <Button variant="outline" className="border-2 border-foreground h-9 font-bold uppercase text-[10px]">Filter</Button>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <Table>

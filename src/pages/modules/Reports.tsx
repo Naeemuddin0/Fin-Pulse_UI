@@ -1,11 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Download, FileText, BarChart3 } from 'lucide-react';
+import { Download, FileText, BarChart3, ArrowRight, ArrowUpRight, ArrowDownRight, Scale } from 'lucide-react';
+import { useState } from 'react';
 
 const Reports: React.FC = () => {
+  const [isComparing, setIsComparing] = useState(false);
+  const [dateFrom, setDateFrom] = useState('2024-01-01');
+  const [dateTo, setDateTo] = useState('2024-01-31');
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -24,37 +30,93 @@ const Reports: React.FC = () => {
 
         <TabsContent value="pl">
           <Card className="border-2 border-foreground">
-            <CardHeader className="flex flex-row gap-4 items-center justify-between">
-              <div>
-                <CardTitle className="text-xl">Profit & Loss Statement</CardTitle>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Jan 1, 2024 - Jan 31, 2024</CardDescription>
+            <CardHeader className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl">Profit & Loss Statement</CardTitle>
+                  <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Financial Performance Analysis</CardDescription>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant={isComparing ? 'default' : 'outline'}
+                    size="sm"
+                    className={`h-8 text-[10px] font-bold uppercase border-2 border-foreground ${isComparing ? 'bg-black text-white' : ''}`}
+                    onClick={() => setIsComparing(!isComparing)}
+                  >
+                    <Scale size={14} className="mr-2" />
+                    {isComparing ? 'Disable Comparison' : 'Compare Periods'}
+                  </Button>
+                  <Button size="sm" className="h-8 text-[10px] font-bold uppercase bg-black text-white px-6">
+                    <Download size={14} className="mr-2" /> PDF
+                  </Button>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="h-8 text-[10px] font-bold uppercase border-2 border-foreground">
-                  Compare to Last Month
-                </Button>
-                <Button size="sm" className="h-8 text-[10px] font-bold uppercase bg-black text-white px-6">
-                  Export PDF
-                </Button>
+              <div className="flex gap-4 items-end bg-gray-50 p-3 border-2 border-foreground">
+                <div className="space-y-1">
+                  <Label className="text-[9px] font-black uppercase">Report Period</Label>
+                  <div className="flex items-center gap-2">
+                    <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="h-8 border-2 border-foreground bg-white text-xs w-36" />
+                    <ArrowRight size={14} />
+                    <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="h-8 border-2 border-foreground bg-white text-xs w-36" />
+                  </div>
+                </div>
+                {isComparing && (
+                  <div className="space-y-1 border-l-2 border-gray-300 pl-4">
+                    <Label className="text-[9px] font-black uppercase">Comparing against</Label>
+                    <Select defaultValue="prev_month">
+                      <SelectTrigger className="h-8 border-2 border-foreground bg-white text-xs w-48"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="prev_month">Previous Month</SelectItem>
+                        <SelectItem value="prev_year">Previous Year (SMLY)</SelectItem>
+                        <SelectItem value="custom">Custom Period</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                <Button className="h-8 bg-black text-white px-4 font-bold uppercase text-[10px] ml-auto">Generate</Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-8">
                 {/* Revenue Section */}
                 <div>
-                  <h3 className="text-xs font-black uppercase border-b-2 border-foreground pb-1 mb-3 bg-gray-50 px-2">Income / Revenue</h3>
+                  <h3 className="text-xs font-black uppercase border-b-2 border-foreground pb-1 mb-3 bg-gray-50 px-2 h-8 flex items-center">
+                    Income / Revenue
+                  </h3>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center px-4 py-1 hover:bg-gray-50">
-                      <span className="text-sm font-medium">Sales Income</span>
-                      <span className="text-sm font-bold">PKR 1,500,000</span>
+                    <div className="grid grid-cols-12 gap-4 px-4 py-1 hover:bg-gray-50 border-b border-gray-100 items-center">
+                      <span className="col-span-5 text-sm font-medium">Sales Income</span>
+                      <span className="col-span-2 text-sm font-bold text-right">PKR 1,500,000</span>
+                      {isComparing && (
+                        <>
+                          <span className="col-span-2 text-sm font-medium text-gray-400 text-right">PKR 1,200,000</span>
+                          <span className="col-span-3 text-xs font-bold text-right flex items-center justify-end gap-1 text-green-600">
+                            +300,000 (25%) <ArrowUpRight size={12} />
+                          </span>
+                        </>
+                      )}
                     </div>
-                    <div className="flex justify-between items-center px-4 py-1 hover:bg-gray-50">
-                      <span className="text-sm font-medium">Service Revenue</span>
-                      <span className="text-sm font-bold">PKR 450,000</span>
+                    <div className="grid grid-cols-12 gap-4 px-4 py-1 hover:bg-gray-50 border-b border-gray-100 items-center">
+                      <span className="col-span-5 text-sm font-medium">Service Revenue</span>
+                      <span className="col-span-2 text-sm font-bold text-right">PKR 450,000</span>
+                      {isComparing && (
+                        <>
+                          <span className="col-span-2 text-sm font-medium text-gray-400 text-right">PKR 420,000</span>
+                          <span className="col-span-3 text-xs font-bold text-right flex items-center justify-end gap-1 text-green-600">
+                            +30,000 (7.1%) <ArrowUpRight size={12} />
+                          </span>
+                        </>
+                      )}
                     </div>
-                    <div className="flex justify-between items-center px-4 py-1 bg-gray-100 font-bold">
-                      <span className="text-sm uppercase tracking-tighter">Gross Revenue</span>
-                      <span className="text-sm">PKR 1,950,000</span>
+                    <div className="grid grid-cols-12 gap-4 px-4 py-2 bg-black text-white font-bold items-center">
+                      <span className="col-span-5 text-sm uppercase tracking-tighter italic">Gross Revenue</span>
+                      <span className="col-span-2 text-sm text-right">PKR 1,950,000</span>
+                      {isComparing && (
+                        <>
+                          <span className="col-span-2 text-sm opacity-50 text-right">PKR 1,620,000</span>
+                          <span className="col-span-3 text-xs text-right text-green-400">+20.3%</span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

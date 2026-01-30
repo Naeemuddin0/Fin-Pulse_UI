@@ -6,11 +6,18 @@ import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Check, X, ArrowRight, Split, AlertCircle } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Check, X, ArrowRight, Split, AlertCircle, CheckCircle } from 'lucide-react';
 
 const Reconciliation: React.FC = () => {
   const [selectedBank, setSelectedBank] = useState<string[]>([]);
   const [selectedSystem, setSelectedSystem] = useState<string[]>([]);
+  const [isAdjustmentOpen, setIsAdjustmentOpen] = useState(false);
+  const [isSummaryOpen, setIsSummaryOpen] = useState(false);
 
   // Mock bank statement items
   const bankItems = [
@@ -49,23 +56,35 @@ const Reconciliation: React.FC = () => {
           <p className="text-muted-foreground">Match bank statements with system records</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" className="border-2 border-foreground font-bold">
             <Check size={18} className="mr-2" />
-            Accept All High-Confidence
+            Run Auto-Match
           </Button>
-          <Button>Finalize Reconciliation</Button>
+          <Button onClick={() => setIsSummaryOpen(true)}>Finalize Reconciliation</Button>
         </div>
       </div>
 
-      <Card className="border-2 border-foreground">
-        <CardContent className="pt-6">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">Reconciliation Progress</span>
-            <span className="text-sm font-medium">{matchedCount}/{totalCount} Items Matched ({Math.round(reconciliationProgress)}%)</span>
+      <div className="flex gap-4 items-end">
+        <div className="flex-1 grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-[10px] font-bold uppercase text-gray-500">Statement From</Label>
+            <Input type="date" className="border-2 border-foreground" />
           </div>
-          <Progress value={reconciliationProgress} className="h-3" />
-        </CardContent>
-      </Card>
+          <div className="space-y-2">
+            <Label className="text-[10px] font-bold uppercase text-gray-500">Statement To</Label>
+            <Input type="date" className="border-2 border-foreground" />
+          </div>
+        </div>
+        <Card className="flex-1 border-2 border-foreground">
+          <CardContent className="py-2">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-bold uppercase">Progress</span>
+              <span className="text-[10px] font-bold uppercase">{matchedCount}/{totalCount} Items</span>
+            </div>
+            <Progress value={reconciliationProgress} className="h-2" />
+          </CardContent>
+        </Card>
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         {/* Left: Bank Statement */}
@@ -244,11 +263,76 @@ const Reconciliation: React.FC = () => {
             </DialogContent>
           </Dialog>
 
+          <Dialog open={isAdjustmentOpen} onOpenChange={setIsAdjustmentOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-2 border-foreground font-bold uppercase text-[10px] tracking-widest h-12 px-8">
+                Add Adjustment
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="border-2 border-foreground">
+              <DialogHeader>
+                <DialogTitle>Manual Adjustment</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 pt-4">
+                <div className="space-y-2">
+                  <Label>Adjustment Date</Label>
+                  <Input type="date" className="border-2 border-foreground" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Amount (PKR)</Label>
+                  <Input type="number" className="border-2 border-foreground" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Adjustment Type</Label>
+                  <Select>
+                    <SelectTrigger className="border-2 border-foreground">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="bank-fee">Bank Fee</SelectItem>
+                      <SelectItem value="int-income">Interest Income</SelectItem>
+                      <SelectItem value="other">Other Variance</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Button className="w-full bg-black text-white font-bold h-12" onClick={() => setIsAdjustmentOpen(false)}>Post Adjustment</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
           <Button className="bg-black text-white font-bold uppercase text-[10px] tracking-widest h-12 px-8 flex items-center gap-2">
             Commit Match <Check size={14} />
           </Button>
         </div>
       </div>
+
+      <Dialog open={isSummaryOpen} onOpenChange={setIsSummaryOpen}>
+        <DialogContent className="border-4 border-foreground max-w-xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black uppercase tracking-tighter italic">Reconciliation Summary</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6 pt-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 border-2 border-foreground bg-gray-50">
+                <p className="text-[10px] font-bold uppercase text-gray-400">Statement Balance</p>
+                <p className="text-xl font-bold">PKR 710,000</p>
+              </div>
+              <div className="p-4 border-2 border-foreground bg-gray-50">
+                <p className="text-[10px] font-bold uppercase text-gray-400">Ledger Balance</p>
+                <p className="text-xl font-bold">PKR 710,000</p>
+              </div>
+            </div>
+            <div className="p-4 bg-green-50 border-2 border-green-600">
+              <p className="text-xs font-bold uppercase text-green-700">✓ In Equilibrium</p>
+              <p className="text-[10px] text-green-600 mt-1 italic">Statement and Ledger balances match exactly. No further adjustments required.</p>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsSummaryOpen(false)}>Back to Review</Button>
+              <Button className="bg-black text-white px-10 font-bold uppercase text-[10px] h-12" onClick={() => setIsSummaryOpen(false)}>Finalize & Lock Period</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Card className="border-2 border-foreground">
         <CardHeader>
