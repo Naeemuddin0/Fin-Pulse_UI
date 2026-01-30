@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { useApp } from '@/contexts/AppContext';
 import { Bell, Check, Filter } from 'lucide-react';
 
@@ -35,9 +36,9 @@ const Notifications: React.FC = () => {
 
       <Card className="border-2 border-foreground">
         <CardHeader>
-          <div className="flex gap-4">
+          <div className="flex gap-4 items-center">
             <Select defaultValue="all">
-              <SelectTrigger className="w-48 border-2 border-foreground"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="w-48 border-2 border-foreground"><SelectValue placeholder="Category" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="financial">Financial</SelectItem>
@@ -46,15 +47,20 @@ const Notifications: React.FC = () => {
                 <SelectItem value="system">System</SelectItem>
               </SelectContent>
             </Select>
+            <div className="flex items-center gap-2 bg-gray-50 border-2 border-foreground px-3 py-1 rounded-none">
+              <span className="text-[10px] font-bold uppercase opacity-50">Date Range</span>
+              <Input type="date" className="h-6 border-none bg-transparent p-0 w-28 text-[10px] font-bold" />
+              <span className="text-xs">to</span>
+              <Input type="date" className="h-6 border-none bg-transparent p-0 w-28 text-[10px] font-bold" />
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-2">
           {notifications.map((notification) => (
             <div
               key={notification.id}
-              className={`flex items-start gap-4 p-4 border-2 cursor-pointer transition-colors ${
-                notification.isRead ? 'border-muted' : 'border-foreground bg-secondary'
-              }`}
+              className={`flex items-start gap-4 p-4 border-2 cursor-pointer transition-colors ${notification.isRead ? 'border-muted' : 'border-foreground bg-secondary'
+                }`}
               onClick={() => markNotificationRead(notification.id)}
             >
               <span className="text-2xl">{getCategoryIcon(notification.category)}</span>
