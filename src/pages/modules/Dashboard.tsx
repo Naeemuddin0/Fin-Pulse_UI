@@ -7,19 +7,33 @@ import { Progress } from '@/components/ui/progress';
 import { mockCashFlowData, mockExpenseCategories, mockVendors } from '@/data/mockData';
 import { Download, TrendingUp, TrendingDown, DollarSign, Wallet, Eye, EyeOff } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, Legend } from 'recharts';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Settings } from 'lucide-react';
 
 const COLORS = ['hsl(12, 76%, 61%)', 'hsl(173, 58%, 39%)', 'hsl(197, 37%, 24%)', 'hsl(43, 74%, 66%)', 'hsl(27, 87%, 67%)'];
 
 const Dashboard: React.FC = () => {
   const [dateRange, setDateRange] = useState('last_30');
-  const [widgets, setWidgets] = useState({ cashFlow: true, liquidity: true, vendors: true, expenses: true, budget: true });
+  const [widgets, setWidgets] = useState({
+    metrics: true,
+    cashFlow: true,
+    liquidity: true,
+    vendors: true,
+    expenses: true,
+    budget: true
+  });
+  const [budgetTarget, setBudgetTarget] = useState(150000);
+  const [isCustomizeOpen, setIsCustomizeOpen] = useState(false);
+  const [isBudgetOpen, setIsBudgetOpen] = useState(false);
 
   const totalInflow = mockCashFlowData.reduce((sum, d) => sum + d.inflow, 0);
   const totalOutflow = mockCashFlowData.reduce((sum, d) => sum + d.outflow, 0);
   const currentBalance = 695000;
   const pendingPayables = 33500;
   const netLiquidity = currentBalance - pendingPayables;
-  const budgetTarget = 150000;
   const actualSpend = totalOutflow;
 
   const topVendors = mockVendors.slice(0, 5).map(v => ({ name: v.name, spend: v.totalSpend }));
@@ -42,7 +56,31 @@ const Dashboard: React.FC = () => {
               <SelectItem value="fiscal_year">This Fiscal Year</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline"><Download size={18} className="mr-2" />Export</Button>
+          <Dialog open={isCustomizeOpen} onOpenChange={setIsCustomizeOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="border-2 border-foreground">
+                <Settings size={18} className="mr-2" />
+                Customize
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="border-2 border-foreground">
+              <DialogHeader>
+                <DialogTitle>Customize Dashboard Layout</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 pt-4">
+                {Object.entries(widgets).map(([key, value]) => (
+                  <div key={key} className="flex items-center justify-between">
+                    <Label className="capitalize">{key.replace(/([A-Z])/g, ' $1')}</Label>
+                    <Switch
+                      checked={value}
+                      onCheckedChange={(checked) => setWidgets(prev => ({ ...prev, [key]: checked }))}
+                    />
+                  </div>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
+          <Button variant="outline" className="border-2 border-foreground"><Download size={18} className="mr-2" />Export</Button>
         </div>
       </div>
 
@@ -161,9 +199,31 @@ const Dashboard: React.FC = () => {
         <Card className="border-2 border-foreground">
           <CardHeader><CardTitle>Budget vs Actual</CardTitle></CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between items-center text-sm">
               <span>Monthly Budget Target</span>
-              <span className="font-bold">PKR {budgetTarget.toLocaleString()}</span>
+              <div className="flex items-center gap-2">
+                <span className="font-bold">PKR {budgetTarget.toLocaleString()}</span>
+                <Dialog open={isBudgetOpen} onOpenChange={setIsBudgetOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-6 w-6"><Settings size={12} /></Button>
+                  </DialogTrigger>
+                  <DialogContent className="border-2 border-foreground">
+                    <DialogHeader><DialogTitle>Set Monthly Budget</DialogTitle></DialogHeader>
+                    <div className="space-y-4 pt-4">
+                      <div className="space-y-2">
+                        <Label>Target Amount (PKR)</Label>
+                        <Input
+                          type="number"
+                          value={budgetTarget}
+                          onChange={(e) => setBudgetTarget(Number(e.target.value))}
+                          className="border-2 border-foreground"
+                        />
+                      </div>
+                      <Button className="w-full" onClick={() => setIsBudgetOpen(false)}>Save Budget</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
             <Progress value={(actualSpend / budgetTarget) * 100} className="h-4" />
             <div className="flex justify-between text-sm">
