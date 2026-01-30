@@ -16,6 +16,11 @@ const TransactionManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [isManualEntryOpen, setIsManualEntryOpen] = useState(false);
+  const [selectedTransactions, setSelectedTransactions] = useState<string[]>([]);
+
+  const toggleTransaction = (id: string) => {
+    setSelectedTransactions(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  };
 
   const filteredTransactions = transactions.filter((t) => {
     const matchesSearch =
@@ -145,110 +150,101 @@ const TransactionManagement: React.FC = () => {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40 border-2 border-foreground">
+              <SelectTrigger className="w-48 border-2 border-foreground">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">All Transactions</SelectItem>
+                <SelectItem value="uncategorized">Uncategorized Only</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="approved">Approved</SelectItem>
-                <SelectItem value="reconciled">Reconciled</SelectItem>
-                <SelectItem value="uncategorized">Uncategorized</SelectItem>
               </SelectContent>
             </Select>
+            <Button className="border-2 border-foreground font-bold">Apply Filter</Button>
+            <Button
+              className="bg-black text-white font-bold ml-auto"
+              disabled={selectedTransactions.length === 0}
+            >
+              Approve Selected ({selectedTransactions.length})
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow className="border-b-2 border-foreground">
+                <TableHead className="w-10">
+                  <input type="checkbox" onChange={(e) => {
+                    if (e.target.checked) setSelectedTransactions(filteredTransactions.map(t => t.id));
+                    else setSelectedTransactions([]);
+                  }} />
+                </TableHead>
                 <TableHead>Date</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Vendor</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Amount</TableHead>
-                <TableHead>Source</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredTransactions.map((transaction) => (
                 <TableRow
                   key={transaction.id}
-                  className={`border-b border-muted ${transaction.status === 'uncategorized' ? 'bg-destructive/10' : ''
-                    }`}
+                  className={`border-b border-muted ${transaction.status === 'uncategorized' ? 'bg-destructive/10' : ''}`}
                 >
+                  <TableCell>
+                    <input
+                      type="checkbox"
+                      checked={selectedTransactions.includes(transaction.id)}
+                      onChange={() => toggleTransaction(transaction.id)}
+                    />
+                  </TableCell>
                   <TableCell>{transaction.date}</TableCell>
                   <TableCell className="font-medium">
                     {transaction.description}
                   </TableCell>
-                  <TableCell>{transaction.vendor || '-'}</TableCell>
                   <TableCell>
-                    <div className="flex flex-col gap-2">
-                      {transaction.status === 'uncategorized' ? (
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <Select onValueChange={(value) => handleCategorize(transaction.id, value)}>
-                              <SelectTrigger className="w-40 border-2 border-dashed border-gray-300 h-9">
-                                <SelectValue placeholder="Assign Vendor" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <div className="p-2 border-b border-gray-100 bg-blue-50/50">
-                                  <p className="text-[10px] font-bold uppercase text-blue-600 mb-1">AI Suggestion</p>
-                                  <SelectItem value="hbl" className="font-bold">HBL (Bank Fees)</SelectItem>
-                                </div>
-                                {mockVendors.map((v) => (
-                                  <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Select onValueChange={(value) => handleCategorize(transaction.id, value)}>
-                              <SelectTrigger className="w-40 border-2 border-foreground h-9">
-                                <SelectValue placeholder="Select Account" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <div className="p-2 border-b border-gray-100 bg-green-50/50">
-                                  <p className="text-[10px] font-bold uppercase text-green-600 mb-1">AI Suggestion</p>
-                                  <SelectItem value="utilities" className="font-bold">Utilities Expense</SelectItem>
-                                </div>
-                                {categories.map((c) => (
-                                  <SelectItem key={c} value={c}>{c}</SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
+                    <Select onValueChange={(value) => handleCategorize(transaction.id, value)}>
+                      <SelectTrigger className="w-40 border-2 border-dashed border-gray-300 h-9">
+                        <SelectValue placeholder={transaction.vendor || "Select Vendor"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <div className="p-2 border-b border-gray-100 bg-blue-50/50">
+                          <p className="text-[10px] font-bold uppercase text-blue-600 mb-1">Suggested Vendor</p>
+                          <SelectItem value="hbl" className="font-bold">HBL (Bank Fees)</SelectItem>
                         </div>
-                      ) : (
-                        <div className="flex flex-col gap-1">
-                          <span className="text-xs font-bold text-gray-500 uppercase tracking-tighter">{transaction.vendor || 'Unknown Vendor'}</span>
-                          <Badge variant="outline" className="w-fit text-[10px] font-bold border-gray-200">
-                            {transaction.category}
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className={transaction.type === 'credit' ? 'text-chart-2 font-medium' : 'text-destructive font-medium'}>
-                    {transaction.type === 'credit' ? '+' : '-'}PKR {transaction.amount.toLocaleString()}
+                        {mockVendors.map(v => <SelectItem key={v.id} value={v.id}>{v.name}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary">{transaction.source}</Badge>
+                    <Select onValueChange={(value) => handleCategorize(transaction.id, value)}>
+                      <SelectTrigger className="w-40 border-2 border-dashed border-gray-300 h-9">
+                        <SelectValue placeholder={transaction.category || "Select Category"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <div className="p-2 border-b border-gray-100 bg-orange-50/50">
+                          <p className="text-[10px] font-bold uppercase text-orange-600 mb-1">Suggested Category</p>
+                          <SelectItem value="bank-fees" className="font-bold">Bank Charges</SelectItem>
+                        </div>
+                        {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                      </SelectContent>
+                    </Select>
                   </TableCell>
+                  <TableCell className="font-bold">PKR {transaction.amount.toLocaleString()}</TableCell>
                   <TableCell>{getStatusBadge(transaction.status)}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="icon">
-                        <Edit size={16} />
-                      </Button>
-                      {transaction.status === 'pending' && (
-                        <Button variant="outline" size="icon" onClick={() => handleApprove(transaction.id)}>
-                          <CheckCircle size={16} />
-                        </Button>
-                      )}
-                    </div>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 text-xs font-bold text-green-600 hover:text-green-700 hover:bg-green-50"
+                      onClick={() => handleApprove(transaction.id)}
+                      disabled={transaction.status === 'approved'}
+                    >
+                      {transaction.status === 'approved' ? <CheckCircle size={14} /> : 'Approve'}
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}

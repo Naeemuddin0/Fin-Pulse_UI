@@ -10,6 +10,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 const CashFlowManagement: React.FC = () => {
   const [dateRange, setDateRange] = useState('current_month');
+  const [selectedBank, setSelectedBank] = useState('all');
 
   const totalInflow = mockCashFlowData.reduce((sum, d) => sum + d.inflow, 0);
   const totalOutflow = mockCashFlowData.reduce((sum, d) => sum + d.outflow, 0);
@@ -28,8 +29,18 @@ const CashFlowManagement: React.FC = () => {
           <p className="text-muted-foreground">Monitor cash position and trends</p>
         </div>
         <div className="flex gap-2">
-          <Select value={dateRange} onValueChange={setDateRange}>
+          <Select value={selectedBank} onValueChange={setSelectedBank}>
             <SelectTrigger className="w-48 border-2 border-foreground">
+              <SelectValue placeholder="All Bank Accounts" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Bank Accounts</SelectItem>
+              <SelectItem value="hbl">HBL Operating</SelectItem>
+              <SelectItem value="meezan">Meezan Primary</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={dateRange} onValueChange={setDateRange}>
+            <SelectTrigger className="w-40 border-2 border-foreground">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -38,7 +49,7 @@ const CashFlowManagement: React.FC = () => {
               <SelectItem value="ytd">Year to Date</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline">
+          <Button variant="outline" className="border-2 border-foreground">
             <Download size={18} className="mr-2" />
             Export
           </Button>
@@ -122,26 +133,33 @@ const CashFlowManagement: React.FC = () => {
       </Card>
 
       <div className="grid grid-cols-2 gap-4">
-        <Card className="border-2 border-foreground">
+        <Card className="border-2 border-foreground shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <CardHeader>
-            <CardTitle>Burn Rate Analysis</CardTitle>
-            <CardDescription>Average daily cash outflow</CardDescription>
+            <CardTitle className="text-lg">Top Spending Categories</CardTitle>
+            <CardDescription className="text-[10px] font-bold uppercase tracking-widest">Outflow Concentration</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Avg. Daily Outflow</span>
-              <span className="text-2xl font-bold">PKR {Math.round(avgDailyOutflow).toLocaleString()}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Monthly Burn Rate</span>
-              <span className="text-xl font-bold">PKR {totalOutflow.toLocaleString()}</span>
-            </div>
-            {avgDailyOutflow > 5000 && (
-              <div className="flex items-center gap-2 p-3 bg-destructive/10 border-2 border-destructive">
-                <AlertTriangle size={20} className="text-destructive" />
-                <span className="text-sm">Burn rate exceeds recommended threshold</span>
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs font-bold uppercase">
+                <span>Inventory & Stock</span>
+                <span>PKR 85,000</span>
               </div>
-            )}
+              <Progress value={65} className="h-2 bg-gray-100" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs font-bold uppercase">
+                <span>Employee Salaries</span>
+                <span>PKR 150,000</span>
+              </div>
+              <Progress value={85} className="h-2 bg-gray-100" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs font-bold uppercase">
+                <span>Utilities & Rent</span>
+                <span>PKR 45,000</span>
+              </div>
+              <Progress value={35} className="h-2 bg-gray-100" />
+            </div>
           </CardContent>
         </Card>
 
